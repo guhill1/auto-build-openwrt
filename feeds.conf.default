@@ -11,4 +11,3 @@ src-git telephony https://git.openwrt.org/feed/telephony.git
 
 src-git small8 https://github.com/kenzok8/small-package
 src-git small https://github.com/kenzok8/small
-
