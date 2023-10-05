@@ -79,11 +79,11 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          sudo -E  apt update -y
-          sudo -E apt full-upgrade -y
-          
           #grub-efi-amd64-signed dependency issue in Ubuntu 22.04LTS
           sudo -E apt --only-upgrade install grub-efi-amd64-signed
+          
+          sudo -E  apt update -y
+          sudo -E apt full-upgrade -y
           
           sudo -E apt install -y ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential \
             bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib \
