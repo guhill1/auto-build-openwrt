@@ -35,8 +35,7 @@ env:
 
 jobs:
  build:
-   runs-on: ubuntu-latest
-   steps:
+   runs-on: ubuntu-20.04
     - name: Check disk space
       run: df . -h
     - name: Free disk space
