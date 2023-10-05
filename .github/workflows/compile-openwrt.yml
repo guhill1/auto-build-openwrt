@@ -80,7 +80,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           #grub-efi-amd64-signed dependency issue in Ubuntu 22.04LTS
-          sudo apt remove grub-efi-amd64-signed
+          sudo apt remove grub-efi-amd64-signed --allow-remove-essential -y
           sudo apt install grub-pc
           
           sudo -E  apt update -y
