@@ -85,7 +85,7 @@ jobs:
           #sudo apt remove grub-efi-amd64-signed --allow-remove-essential -y
           #sudo apt install grub-pc
 
-          sudo apt-get purge grub\* -y
+          sudo apt-get purge grub\* --allow-remove-essential -y
           sudo apt-get install grub-efi -y
           sudo apt-get autoremove -y
           sudo update-grub -y
