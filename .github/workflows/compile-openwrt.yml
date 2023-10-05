@@ -7,6 +7,7 @@
 # https://github.com/P3TERX/Actions-OpenWrt
 # Description: Build OpenWrt using GitHub Actions
 #
+
 name: Compile OpenWrt
 on:
   repository_dispatch:
@@ -29,6 +30,7 @@ env:
   UPLOAD_WETRANSFER: false
   UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
+  
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -63,6 +65,7 @@ jobs:
           sudo apt-get autoremove -y >/dev/null 2>&1
           sudo apt-get autoclean -y >/dev/null 2>&1
           echo "some packages purged"
+          
       - name: Check disk space
         run: |
           sudo dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -nr | head
@@ -71,20 +74,20 @@ jobs:
           
       - name: Checkout
         uses: actions/checkout@main
+        
       - name: Initialization environment
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-        
           sudo -E  apt update -y
           sudo -E apt full-upgrade -y
           sudo -E apt install -y ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential \
-           bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib \
-           git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libglib2.0-dev libgmp3-dev libltdl-dev \
-           libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libreadline-dev libssl-dev libtool lrzsz \
-           mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools \
-           libpython3-dev qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip \
-           vim wget xmlto xxd zlib1g-dev python3-setuptools
+            bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib \
+            git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libglib2.0-dev libgmp3-dev libltdl-dev \
+            libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libreadline-dev libssl-dev libtool lrzsz \
+            mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools \
+            libpython3-dev qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip \
+            vim wget xmlto xxd zlib1g-dev python3-setuptools
   
           sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
           sudo -E apt-get autoremove --purge
@@ -104,10 +107,13 @@ jobs:
           chmod +x $DIY_P1_SH
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P1_SH
+          
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
+        
       - name: Install feeds
         run: cd openwrt && ./scripts/feeds install -a
+        
       - name: Load custom configuration
         run: |
           [ -e files ] && mv files openwrt/files
@@ -115,12 +121,14 @@ jobs:
           chmod +x $DIY_P2_SH
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P2_SH
+          
       - name: SSH connection to Actions
         uses: P3TERX/ssh2actions@v1.0.0
         if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
         env:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          
       - name: Download package
         id: package
         run: |
@@ -129,6 +137,7 @@ jobs:
           make download -j8
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
+          
       - name: Compile the firmware
         id: compile
         run: |
