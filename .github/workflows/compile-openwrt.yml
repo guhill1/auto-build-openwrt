@@ -80,7 +80,8 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           #grub-efi-amd64-signed dependency issue in Ubuntu 22.04LTS
-          sudo -E apt --only-upgrade install grub-efi-amd64-signed
+          sudo rm /var/lib/dpkg/info/grub*
+          sudo dpkg --configure -a
           
           sudo -E  apt update -y
           sudo -E apt full-upgrade -y
