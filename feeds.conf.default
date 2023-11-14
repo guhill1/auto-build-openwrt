@@ -9,6 +9,10 @@ src-git telephony https://git.openwrt.org/feed/telephony.git
 #src-git oldpackages http://git.openwrt.org/packages.git
 #src-link custom /usr/src/openwrt/custom-feed
 
-src-git haibo https://github.com/haiibo/openwrt-packages
+#src-git haibo https://github.com/haiibo/openwrt-packages
 src-git hello https://github.com/fw876/helloworld;main
+
+src-git kenzo https://github.com/kenzok8/openwrt-packages
+#src-git smpackage https://github.com/kenzok8/small-package
+src-git small https://github.com/kenzok8/small
 
