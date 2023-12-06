@@ -1,6 +1,6 @@
 ## Auto build openwrt firmware
 
-- forked from P3TERX/Actions-OpenWrt
+- modification from P3TERX/Actions-OpenWrt
 - update for all the deprecated libraries.
 - License MIT
 
