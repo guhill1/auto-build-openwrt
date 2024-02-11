@@ -64,6 +64,12 @@ jobs:
           sudo aptitude purge '~n ^dotnet' -f -y >/dev/null 2>&1
           sudo apt-get autoremove -y >/dev/null 2>&1
           sudo apt-get autoclean -y >/dev/null 2>&1
+          # Workaround to provide additional free space for testing.
+          # https://github.com/actions/virtual-environments/issues/2840
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
           echo "some packages purged"
           
       - name: Check disk space
