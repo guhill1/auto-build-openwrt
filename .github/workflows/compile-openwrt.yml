@@ -134,10 +134,11 @@ jobs:
           sudo -E apt-get clean
           sudo timedatectl set-timezone "$TZ"
           sudo mkdir -p /workdir
-          sudo chown $USER:$GROUPS /workdir
+          #sudo chown $USER:$GROUPS /workdir
+          sudo chown $USER:$GROUPS $GITHUB_WORKSPACE
           
       - name: Clone source code
-        working-directory: /workdir
+        working-directory: ./
         run: |
           df -hT $PWD
           git clone $REPO_URL -b $REPO_BRANCH openwrt
