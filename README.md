@@ -4,7 +4,7 @@
 - Push `.config` , `feeds.conf.default`, file to the GitHub repository.
 - Select `Build OpenWrt` on the Actions page.
 - Click the `Run workflow` button.
-- When the build is complete, click the `Artifacts` button in the upper right corner of the Actions page to download the binaries.
+- When the build is finished, find the `Artifacts` workflow output at the bottom of the workflow running page to download the firmware.
 
 ## Credits
 - [P3TERX](https://github.com/P3TERX/Actions-OpenWrt)
