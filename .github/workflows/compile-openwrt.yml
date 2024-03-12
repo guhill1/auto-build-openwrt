@@ -160,6 +160,14 @@ jobs:
         id: compile
         run: |
           cd openwrt
+          # go问题:go.mod requires go >= 1.22 (running go 1.21.5; GOTOOLCHAIN=local)
+          
+          ./scripts/feeds clean
+          ./scripts/feeds update -a
+          rm -rf feeds/packages/lang/golang
+          git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
+          ./scripts/feeds install -a
+          
           echo -e "$(nproc) thread compile"
           make -j$(nproc) || make -j1 || make -j1 V=s
           echo "status=success" >> $GITHUB_OUTPUT
