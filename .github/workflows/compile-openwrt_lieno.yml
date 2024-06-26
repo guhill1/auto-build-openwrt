@@ -9,7 +9,7 @@
 # https://github.com/guhill1/auto-build-openwrt/
 # Description: compile openwrt firmware by GitHub action
 
-name: Compile OpenWrt
+name: Compile OpenWrt Lieno
 on:
   repository_dispatch:
   workflow_dispatch:
