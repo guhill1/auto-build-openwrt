@@ -11,7 +11,7 @@
 
 name: Compile OpenWrt Lieno
 on:
-  repository_dispatch:
+  #repository_dispatch:
   workflow_dispatch:
     inputs:
       ssh:
@@ -19,8 +19,8 @@ on:
         required: false
         default: 'false'
 env:
-  REPO_URL: https://github.com/coolsnowwolf/lede
-  REPO_BRANCH: master
+  REPO_URL: https://github.com/Lienol/openwrt
+  REPO_BRANCH: 23.05
   FEEDS_CONF: feeds.conf.default_lieno
   CONFIG_FILE: .config_lieno
   DIY_P1_SH: diy-part1.sh
