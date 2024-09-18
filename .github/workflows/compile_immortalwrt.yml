@@ -9,7 +9,7 @@
 # https://github.com/guhill1/auto-build-openwrt/
 # Description: compile openwrt firmware by GitHub action
 
-name: Compile OpenWrt Lieno
+name: Compile OpenWrt Immortalwrt
 on:
   #repository_dispatch:
   workflow_dispatch:
@@ -19,10 +19,10 @@ on:
         required: false
         default: 'false'
 env:
-  REPO_URL: https://github.com/Lienol/openwrt
-  REPO_BRANCH: 23.05
-  FEEDS_CONF: feeds.conf.default_lieno
-  CONFIG_FILE: .config_lieno
+  REPO_URL: https://github.com/immortalwrt/immortalwrt
+  REPO_BRANCH: master
+  FEEDS_CONF: feeds.conf.default_immortal
+  CONFIG_FILE: .config_immortalwrt
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
   UPLOAD_BIN_DIR: false
