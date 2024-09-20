@@ -23,6 +23,7 @@ env:
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default_immortal
   CONFIG_FILE: .config_immortalwrt
+  FILES: files
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2_im.sh
   UPLOAD_BIN_DIR: false
@@ -31,7 +32,7 @@ env:
   UPLOAD_WETRANSFER: false
   UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
-  
+
 jobs:
   build:
     runs-on: debian-11
@@ -150,7 +151,7 @@ jobs:
         
       - name: Load custom configuration
         run: |
-          [ -e files ] && mv files openwrt/files
+          [ -e $FILES ] && mv $FILES openwrt/files
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
           chmod +x $DIY_P2_SH
           cd openwrt
