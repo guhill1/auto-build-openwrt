@@ -35,7 +35,7 @@ env:
 
 jobs:
   build:
-    runs-on: debian-11-slim
+    runs-on: debian-11
     steps:          
       - name: Check disk space
         run: |
