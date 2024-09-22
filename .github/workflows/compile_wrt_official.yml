@@ -19,13 +19,13 @@ on:
         required: false
         default: 'false'
 env:
-  REPO_URL: https://github.com/immortalwrt/immortalwrt
-  REPO_BRANCH: master
-  FEEDS_CONF: feeds.conf.default_immortal
-  CONFIG_FILE: .config_immortalwrt
+  REPO_URL: https://github.com/openwrt/openwrt
+  REPO_BRANCH: main
+  FEEDS_CONF: feeds.conf.default_of
+  CONFIG_FILE: .config_of
   FILES: files
   DIY_P1_SH: diy-part1.sh
-  DIY_P2_SH: diy-part2_im.sh
+  DIY_P2_SH: diy-part2_of.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
