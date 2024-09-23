@@ -136,8 +136,8 @@ jobs:
         run: |
           [ -e $FILES_PAT ] && mv $FILES_PAT/* openwrt/ -f
           [ -e $FILES_PAT ] && nl $FILES_PAT/feeds/packages/lang/ruby/Makefile
-          cat openwrt/feeds/packages/lang/ruby/Makefile
-          nl openwrt/feeds/packages/lang/ruby/Makefile
+          cat $FILES_PAT/feeds/packages/lang/ruby/Makefile
+          nl $FILES_PAT/feeds/packages/lang/ruby/Makefile
           echo $FILES_PAT
           echo $FILES_PAT/*
           cd openwrt
