@@ -25,8 +25,9 @@ env:
   CONFIG_FILE: .config_of
   FILES: files_of
   
-  # fils for patch
+  # files for patch
   FILES_PAT: files_of_pat
+  
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2_of.sh
   UPLOAD_BIN_DIR: false
@@ -135,7 +136,7 @@ jobs:
         id: package
         run: |
           [ -e $FILES ] && mv -v $FILES openwrt/files
-          [ -e $FILES_PAT ] && sudo cp -R -v $FILES_PAT/* openwrt
+          # [ -e $FILES_PAT ] && sudo cp -R -v $FILES_PAT/* openwrt
           [ -e $CONFIG_FILE ] && mv -v $CONFIG_FILE openwrt/.config
           
       - name: Slack Notification
