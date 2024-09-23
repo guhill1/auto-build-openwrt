@@ -136,8 +136,13 @@ jobs:
         run: |
           [ -e $FILES_PAT ] && mv $FILES_PAT/* openwrt/ -f
           [ -e $FILES_PAT ] && nl $FILES_PAT/feeds/packages/lang/ruby/Makefile
-          [ -e $FILES_PAT ] && cat $FILES_PAT/feeds/packages/lang/ruby/Makefile
-          [ -e $FILES_PAT ] && nl $FILES_PAT/feeds/packages/lang/ruby/Makefile
           
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_MESSAGE: ${{ steps.package.outputs.stdout }}         
+          SLACK_TITLE: CI Test Suite
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           
+  
 
