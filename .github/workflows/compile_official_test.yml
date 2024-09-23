@@ -135,7 +135,7 @@ jobs:
         id: package
         run: |
           [ -e $FILES ] && mv $FILES openwrt/files
-          [ -e $FILES_PAT ] && cp -R $FILES_PAT/* openwrt
+          [ -e $FILES_PAT ] && sudo cp -R $FILES_PAT/* openwrt
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
           
       - name: Slack Notification
