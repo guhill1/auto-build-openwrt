@@ -134,18 +134,18 @@ jobs:
       - name: Download package
         id: package
         run: |
-          [ -e $FILES_PAT ] && mv $FILES_PAT/* openwrt/ -f >> $GITHUB_OUTPUT
-          [ -e $FILES_PAT ] && nl $FILES_PAT/feeds/packages/lang/ruby/Makefile >> $GITHUB_OUTPUT
-          cat openwrt/feeds/packages/lang/ruby/Makefile >> $GITHUB_OUTPUT
-          nl openwrt/feeds/packages/lang/ruby/Makefile >> $GITHUB_OUTPUT
-          echo $FILES_PAT >> $GITHUB_OUTPUT
-          echo $FILES_PAT/* >> $GITHUB_OUTPUT
+          [ -e $FILES_PAT ] && mv $FILES_PAT/* openwrt/ -f
+          [ -e $FILES_PAT ] && nl $FILES_PAT/feeds/packages/lang/ruby/Makefile
+          cat openwrt/feeds/packages/lang/ruby/Makefile
+          nl openwrt/feeds/packages/lang/ruby/Makefile
+          echo $FILES_PAT
+          echo $FILES_PAT/*
           cd openwrt
-          make defconfig
-          make download -j8
+          # make defconfig
+          # make download -j8
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
-          cat feeds/packages/lang/ruby/Makefile >> $GITHUB_OUTPUT
-          nl feeds/packages/lang/ruby/Makefile >> $GITHUB_OUTPUT
+          cat feeds/packages/lang/ruby/Makefile
+          nl feeds/packages/lang/ruby/Makefile
           
 
