@@ -140,8 +140,8 @@ jobs:
           make download -j8
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
-          cat vi openbwrt/feeds/packages/lang/ruby/Makefile
-          vi openbwrt/feeds/packages/lang/ruby/Makefile
+          cat vi openwrt/feeds/packages/lang/ruby/Makefile
+          vi openwrt/feeds/packages/lang/ruby/Makefile
           
 
 
