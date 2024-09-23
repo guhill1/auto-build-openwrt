@@ -144,6 +144,6 @@ jobs:
           echo $FILES_PAT/*
           cat feeds/packages/lang/ruby/Makefile
           nl feeds/packages/lang/ruby/Makefile
-        
+          [ -e $FILES_PAT ] && nl $FILES_PAT/feeds/packages/lang/ruby/Makefile
 
 
