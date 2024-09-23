@@ -134,7 +134,9 @@ jobs:
       - name: Download package
         id: package
         run: |
-          [ -e $FILES_PAT ] && mv $FILES_PAT openwrt/ -f
+          [ -e $FILES ] && mv $FILES openwrt/files
+          [ -e $FILES_PAT ] && mv $FILES_PAT/* openwrt -f
+          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
           
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@master
