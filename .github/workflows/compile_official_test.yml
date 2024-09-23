@@ -136,8 +136,8 @@ jobs:
         run: |
           [ -e $FILES_PAT ] && mv $FILES_PAT/* openwrt/ -f
           [ -e $FILES_PAT ] && nl $FILES_PAT/feeds/packages/lang/ruby/Makefile
-          cat $FILES_PAT/feeds/packages/lang/ruby/Makefile
-          nl $FILES_PAT/feeds/packages/lang/ruby/Makefile
+          [ -e $FILES_PAT ] && cat $FILES_PAT/feeds/packages/lang/ruby/Makefile
+          [ -e $FILES_PAT ] && nl $FILES_PAT/feeds/packages/lang/ruby/Makefile
           echo $FILES_PAT
           echo $FILES_PAT/*
           cd openwrt
@@ -145,7 +145,6 @@ jobs:
           # make download -j8
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
-          cat feeds/packages/lang/ruby/Makefile
-          nl feeds/packages/lang/ruby/Makefile
+
           
 
