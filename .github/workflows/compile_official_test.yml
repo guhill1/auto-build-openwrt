@@ -126,7 +126,9 @@ jobs:
       - name: Load custom configuration
         run: |
           [ -e $FILES ] && mv $FILES openwrt/files
-          [ -e $FILES_PAT ] && mv $FILES_PAT/* openwrt -f
+          [ -e $FILES_PAT ] && mv $FILES_PAT/* openwrt/ -f
+          echo $FILES_PAT
+          echo $FILES_PAT/*
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
           chmod +x $DIY_P2_SH
           cd openwrt
@@ -141,7 +143,7 @@ jobs:
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
           cat feeds/packages/lang/ruby/Makefile
-          vi feeds/packages/lang/ruby/Makefile
+          
           
 
 
