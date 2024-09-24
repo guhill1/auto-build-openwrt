@@ -9,7 +9,7 @@
 # https://github.com/guhill1/auto-build-openwrt/
 # Description: compile openwrt firmware by GitHub action
 
-name: Compile Official
+name: Compile immortal
 on:
   #repository_dispatch:
   workflow_dispatch:
@@ -19,14 +19,14 @@ on:
         required: false
         default: 'false'
 env:
-  REPO_URL: https://github.com/openwrt/openwrt
-  REPO_BRANCH: main
-  FEEDS_CONF: official/feeds.conf.default
-  CONFIG_FILE: official/.config
-  FILES: official/files
+  REPO_URL: https://github.com/immortalwrt/immortalwrt
+  REPO_BRANCH: master
+  FEEDS_CONF: imt/feeds.conf.default
+  CONFIG_FILE: imt/.config
+  FILES: imt/files
   
   # files for patch
-  FILES_PAT: official/files_pat
+  FILES_PAT: imt/files_pat
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2_of.sh
   UPLOAD_BIN_DIR: false
