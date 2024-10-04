@@ -27,8 +27,8 @@ env:
   
   # files for patch
   FILES_PAT: imt/files_pat
-  DIY_P1_SH: diy-part1.sh
-  DIY_P2_SH: diy-part2_of.sh
+  DIY_P1_SH: imt/diy-part1.sh
+  DIY_P2_SH: imt/diy-part2_im.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
