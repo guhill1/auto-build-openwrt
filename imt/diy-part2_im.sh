@@ -16,5 +16,5 @@
 # Modify compile version
 #sed -i 's/KERNEL_PATCHVER:=6.1/KERNEL_PATCHVER:=6.6/g' target/linux/x86/Makefile
 
-build_date=$(date +'%m-%d-%Y')
+build_date=$(date +'%y-%m-%d')
 sed -i "s/DISTRIB_DESCRIPTION='%D %V %C'/DISTRIB_DESCRIPTION='%D %V %C guhill $build_date'/g"  package/base-files/files/etc/openwrt_release
