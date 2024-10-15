@@ -17,4 +17,4 @@
 #sed -i 's/KERNEL_PATCHVER:=6.1/KERNEL_PATCHVER:=6.6/g' target/linux/x86/Makefile
 
 build_date=$(date +'%Y-%m-%d')
-sed -i "s/<%=pcdata(ver.distname)%> <%=pcdata(ver.distversion)%> /<%=pcdata(ver.distname)%> <%=pcdata(ver.distversion)%> date $build_date /g" package/lean/autocore/files/x86/index.htm
+sed -i "s/<%=pcdata(ver.distname)%> <%=pcdata(ver.distversion)%> /<%=pcdata(ver.distname)%> <%=pcdata(ver.distversion)%> guhill $build_date /g" package/lean/autocore/files/x86/index.htm
