@@ -40,9 +40,8 @@ HOST_CONFIGURE_ARGS += \
 	--disable-install-capi \
 	--without-gmp \
 	--with-static-linked-ext \
-	--with-out-ext=-test-/*,bigdecimal,cgi/escape,continuation,coverage,etc,fcntl,fiddle,io/console,json,json/generator,json/parser,mathn/complex,mathn/rational,nkf,objspace,pty,racc/cparse,rbconfig/sizeof,readline,rubyvm,syslog,win32,win32ole,win32/resolv \
-        --disable-yjit
-        
+        --disable-yjit \
+	--with-out-ext=-test-/*,bigdecimal,cgi/escape,continuation,coverage,etc,fcntl,fiddle,io/console,json,json/generator,json/parser,mathn/complex,mathn/rational,nkf,objspace,pty,racc/cparse,rbconfig/sizeof,readline,rubyvm,syslog,win32,win32ole,win32/resolv        
 
 HOST_BUILD_DEPENDS:=yaml/host
 
