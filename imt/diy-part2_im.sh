@@ -17,4 +17,4 @@
 #sed -i 's/KERNEL_PATCHVER:=6.1/KERNEL_PATCHVER:=6.6/g' target/linux/x86/Makefile
 
 build_date=$(date +'%Y-%m-%d')
-sed -i "s/DISTRIB_DESCRIPTION='%D %V %C'/DISTRIB_DESCRIPTION='%D %V %C guhill $build_date'/g"  package/base-files/files/etc/openwrt_release
+sed -i "s/PRETTY_NAME=\"%D %V\"/PRETTY_NAME='%D %V guhill $build_date'/g"  package/base-files/files/usr/lib/os-release
