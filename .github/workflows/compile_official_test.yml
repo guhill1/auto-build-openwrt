@@ -138,12 +138,7 @@ jobs:
           [ -e $FILES ] && mv -v $FILES openwrt/files
           [ -e $FILES_PAT ] && cp -R -v $FILES_PAT/* openwrt
           nl openwrt/feeds/packages/lang/ruby/Makefile
-          echo "alalalalal"
-          echo "alalalalal"
-          echo "alalalalal"
-          #echo ${{env.DIST_NAME}} >> $GITHUB_OUTPUT
-          echo ${{DIST_NAME}} >> $GITHUB_OUTPUT
-          echo $DIST_NAME >> $GITHUB_OUTPUT
+          echo ${{env.DIST_NAME}} >> $GITHUB_OUTPUT
           cat openwrt/package/feeds/packages/ruby/Makefile
           
 
