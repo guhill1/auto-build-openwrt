@@ -141,9 +141,9 @@ jobs:
           echo "alalalalal"
           echo "alalalalal"
           echo "alalalalal"
-          echo ${{env.DIST_NAME}} >> $GITHUB_OUTPUT
-          #echo ${{DIST_NAME}} >> $GITHUB_OUTPUT
-          #echo $DIST_NAME >> $GITHUB_OUTPUT
+          #echo ${{env.DIST_NAME}} >> $GITHUB_OUTPUT
+          echo ${{DIST_NAME}} >> $GITHUB_OUTPUT
+          echo $DIST_NAME >> $GITHUB_OUTPUT
           cat openwrt/package/feeds/packages/ruby/Makefile
           
 
