@@ -24,6 +24,7 @@ env:
   FEEDS_CONF: official/feeds.conf.default
   CONFIG_FILE: official/.config
   FILES: official/files
+  DIST_NAME: openwrt
   
   # files for patch
   FILES_PAT: official/files_pat
@@ -140,6 +141,7 @@ jobs:
           echo "alalalalal"
           echo "alalalalal"
           echo "alalalalal"
+          echo ${{env.DIST_NAME}}
           cat openwrt/package/feeds/packages/ruby/Makefile
           
 
