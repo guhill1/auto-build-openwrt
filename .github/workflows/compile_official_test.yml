@@ -72,12 +72,11 @@ jobs:
           [ -e $FILES_PAT ] && cp -R -v $FILES_PAT/* openwrt
           nl openwrt/feeds/packages/lang/ruby/Makefile
           echo ${{env.DIST_NAME}} >> $GITHUB_OUTPUT
-          #cat openwrt/package/feeds/packages/ruby/Makefile
-          
+
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_MESSAGE: ${{join(steps.package.outputs.*, '\n')}}
+          SLACK_MESSAGE: ${{join(steps.package.outputs.stdout, '\n')}}
           SLACK_TITLE: CI Test Suite
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
