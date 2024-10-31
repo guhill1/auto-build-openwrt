@@ -41,8 +41,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-     
-
       - name: Load custom feeds
         run: |
           [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
