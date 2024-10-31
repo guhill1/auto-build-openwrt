@@ -19,6 +19,7 @@ on:
         required: false
         default: 'false'
 env:
+  REPO_NAME: OpenwrtLean
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   
@@ -209,7 +210,7 @@ jobs:
         uses: actions/upload-artifact@main
         if: steps.organize.outputs.status == 'success' && !cancelled()
         with:
-          name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          name: ${{ env.REPO_NAME }}_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
       
       - name: Upload firmware to cowtransfer

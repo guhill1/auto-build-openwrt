@@ -19,7 +19,7 @@ on:
         required: false
         default: 'false'
 env:
-  DIST_NAME: immortalwrt
+  REPO_NAME: Immortalwrt
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: master
   FEEDS_CONF: imt/feeds.conf.default
@@ -198,7 +198,7 @@ jobs:
         uses: actions/upload-artifact@main
         if: steps.organize.outputs.status == 'success' && !cancelled()
         with:
-          name: ${{ env.DIST_NAME }}_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          name: ${{ env.REPO_NAME }}_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
       - name: Upload firmware to cowtransfer

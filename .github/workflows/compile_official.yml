@@ -19,6 +19,7 @@ on:
         required: false
         default: 'false'
 env:
+  REPO_NAME: Openwrt
   REPO_URL: https://github.com/openwrt/openwrt
   REPO_BRANCH: main
   FEEDS_CONF: official/feeds.conf.default
@@ -197,7 +198,7 @@ jobs:
         uses: actions/upload-artifact@main
         if: steps.organize.outputs.status == 'success' && !cancelled()
         with:
-          name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          name: ${{ env.REPO_NAME }}_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
       - name: Upload firmware to cowtransfer
