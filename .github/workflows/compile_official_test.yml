@@ -87,7 +87,7 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: $DIST_NAME_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-          path: $DIST_NAME
+          path: ${{ env.DIST_NAME }}
           
 
   
