@@ -41,6 +41,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Initialization environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo chown $USER:$GROUPS $GITHUB_WORKSPACE
+          
       - name: Load custom feeds
         run: |
           chmod +x $DIY_P1_SH
