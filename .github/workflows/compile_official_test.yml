@@ -70,7 +70,8 @@ jobs:
         run: |
           [ -e $FILES ] && mv -v $FILES openwrt/files
           [ -e $FILES_PAT ] && cp -R -v $FILES_PAT/* openwrt
-          echo outputContent = ${{env.DIST_NAME}} >> $GITHUB_OUTPUT
+          $content = ${{env.DIST_NAME}}
+          echo outputContent = $content >> $GITHUB_OUTPUT
 
       - name: Print version from file to console
         id: write-content
