@@ -42,7 +42,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Load custom feeds
-        working-directory: ./
         run: |
           chmod +x $DIY_P1_SH
           mkdir openwrt
