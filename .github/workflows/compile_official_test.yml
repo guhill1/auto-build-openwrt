@@ -72,6 +72,8 @@ jobs:
           [ -e $FILES ] && mv -v $FILES openwrt/files
           [ -e $FILES_PAT ] && cp -R -v $FILES_PAT/* openwrt
           echo "aaa=$DIST_NAME" >> $GITHUB_OUTPUT
+          echo "Pwsh version: ${{ steps.package.outputs.aaa }}"
+          echo "Bash version: ${{ steps.package.outputs.aaa }}"
 
 
       - name: Print version from file to console
