@@ -136,6 +136,7 @@ jobs:
           rm -rf feeds/packages/lang/golang
           git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
           ./scripts/feeds install -a
+          
           #-----------------------------------------------------------------------------------------
 
       - name: Update feeds
@@ -144,6 +145,11 @@ jobs:
       - name: Install feeds
         run: cd openwrt && ./scripts/feeds install -a
 
+      # Fix: Mosdns 问题: Package luci-app-mosdns wants to install file
+      # /mnt/disk2/x64openwrt/lede/build_dir/target-x86_64_musl/root-x86/etc/init.d/mosdns 
+      # But that file is already provided by package  * mosdns
+      #-----------------------------------------------------------------------------------------
+      
       - name: Load custom configuration
         run: |
           [ -e $FILES ] && mv $FILES openwrt/files
@@ -151,6 +157,7 @@ jobs:
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
           chmod +x $DIY_P2_SH
           cd openwrt
+          cp -rfv feeds/small/mosdns feeds/packages/net #Fix: Mosdns
           $GITHUB_WORKSPACE/$DIY_P2_SH
 
       - name: Download package
