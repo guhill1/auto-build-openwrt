@@ -25,7 +25,7 @@ env:
   CONFIG_FILE: official/.config
   FILES: official/files
   DIST_NAME: openwrt
-  
+
   # files for patch
   FILES_PAT: official/files_pat
   DIY_P1_SH: diy-part1.sh
@@ -49,14 +49,14 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           sudo chown $USER:$GROUPS $GITHUB_WORKSPACE
-          
+
       - name: Load custom feeds
         run: |
           chmod +x $DIY_P1_SH
           mkdir openwrt
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P1_SH
-          
+
       - name: Load custom configuration
         run: |
           [ -e $FILES ] && mv $FILES openwrt/files
@@ -71,15 +71,14 @@ jobs:
         run: |
           [ -e $FILES ] && mv -v $FILES openwrt/files
           [ -e $FILES_PAT ] && cp -R -v $FILES_PAT/* openwrt
+
           #
           # Fix: Mosdns 问题: Package luci-app-mosdns wants to install file
-          # /mnt/disk2/x64openwrt/lede/build_dir/target-x86_64_musl/root-x86/etc/init.d/mosdns 
+          # /mnt/disk2/x64openwrt/lede/build_dir/target-x86_64_musl/root-x86/etc/init.d/mosdns
           # But that file is already provided by package  * mosdns
           #-----------------------------------------------------------------------------------------
           #
-          
-          
-          
+
           echo "aaa=$DIST_NAME" >> $GITHUB_OUTPUT
           echo "Pwsh version: ${{ steps.package.outputs.aaa }}"
           echo "Bash version: ${{ steps.package.outputs.aaa }}"
@@ -97,7 +96,7 @@ jobs:
         with:
           name: $DIST_NAME_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.DIST_NAME }}
-          
 
-  
+
+
 
