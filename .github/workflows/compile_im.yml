@@ -158,7 +158,7 @@ jobs:
           # /mnt/disk2/x64openwrt/lede/build_dir/target-x86_64_musl/root-x86/etc/init.d/mosdns
           # But that file is already provided by package  * mosdns
 
-          cp -rfv feeds/small/mosdns feeds/packages/net #Fix: Mosdns
+          cp -rfv feeds/small/mosdns feeds/packages/net
           #-----------------------------------------------------------------------------------------
 
           $GITHUB_WORKSPACE/$DIY_P2_SH
