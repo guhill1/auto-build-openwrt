@@ -72,13 +72,6 @@ jobs:
           [ -e $FILES ] && mv -v $FILES openwrt/files
           [ -e $FILES_PAT ] && cp -R -v $FILES_PAT/* openwrt
 
-          #
-          # Fix: Mosdns 问题: Package luci-app-mosdns wants to install file
-          # /mnt/disk2/x64openwrt/lede/build_dir/target-x86_64_musl/root-x86/etc/init.d/mosdns
-          # But that file is already provided by package  * mosdns
-          #-----------------------------------------------------------------------------------------
-          #
-
           echo "aaa=$DIST_NAME" >> $GITHUB_OUTPUT
           echo "Pwsh version: ${{ steps.package.outputs.aaa }}"
           echo "Bash version: ${{ steps.package.outputs.aaa }}"
@@ -97,6 +90,8 @@ jobs:
           name: $DIST_NAME_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.DIST_NAME }}
 
-
-
-
+      - name: Fix go requires version >= 1.22
+        run: |
+          cd openwrt
+          rm -rf feeds/packages/lang/golang
+          git clone https://github.com/kenzok8/golang feeds/packages/lang/golang

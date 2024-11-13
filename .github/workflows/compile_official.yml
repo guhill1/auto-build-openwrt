@@ -25,7 +25,7 @@ env:
   FEEDS_CONF: official/feeds.conf.default
   CONFIG_FILE: official/.config
   FILES: official/files
-  
+
   # files for patch
   FILES_PAT: official/files_pat
   DIY_P1_SH: diy-part1.sh
@@ -129,20 +129,17 @@ jobs:
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P1_SH
 
-          # Fix: go问题:go.mod requires go >= 1.22 (running go 1.21.5; GOTOOLCHAIN=local)
-
-          ./scripts/feeds clean
-          ./scripts/feeds update -a
-          rm -rf feeds/packages/lang/golang
-          git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
-          ./scripts/feeds install -a
-          #-----------------------------------------------------------------------------------------
-
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
 
       - name: Install feeds
         run: cd openwrt && ./scripts/feeds install -a
+
+      - name: Fix go requires version >= 1.22
+        run: |
+          cd openwrt
+          rm -rf feeds/packages/lang/golang
+          git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
 
       - name: Load custom configuration
         run: |
