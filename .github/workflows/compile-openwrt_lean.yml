@@ -28,7 +28,7 @@ env:
   FILES: Lean/files
 
   # files for patch
-  FILES_PAT: Lean/files_pat
+  COMP_PATCH: Lean/comp_patch
 
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
@@ -156,7 +156,7 @@ jobs:
       - name: Load custom configuration
         run: |
           [ -e $FILES ] && mv $FILES openwrt/files
-          [ -e $FILES_PAT ] && cp -R -v $FILES_PAT/* openwrt
+          [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/* openwrt
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
           chmod +x $DIY_P2_SH
           cd openwrt

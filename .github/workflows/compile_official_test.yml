@@ -27,7 +27,7 @@ env:
   DIST_NAME: openwrt
 
   # files for patch
-  FILES_PAT: official/files_pat
+  COMP_PATCH: official/comp_patch
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2_of.sh
   UPLOAD_BIN_DIR: false
@@ -70,7 +70,7 @@ jobs:
         shell: bash
         run: |
           [ -e $FILES ] && mv -v $FILES openwrt/files
-          [ -e $FILES_PAT ] && cp -R -v $FILES_PAT/* openwrt
+          [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/* openwrt
 
           echo "aaa=$DIST_NAME" >> $GITHUB_OUTPUT
           echo "Pwsh version: ${{ steps.package.outputs.aaa }}"
