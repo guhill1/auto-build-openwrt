@@ -152,6 +152,11 @@ jobs:
           cd openwrt
           rm -rf feeds/packages/lang/golang
           git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
+          
+      - name: Fix smartdns
+        run: |
+          rm -rfv feeds/luci/applications/luci-app-smartdns
+          [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/feeds/luci/applications/luci-app-smartdns openwrt/feeds/luci/applications
 
       - name: Fix ddns-go
         run: |
