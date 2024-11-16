@@ -92,9 +92,8 @@ jobs:
 
       - name: Fix go requires version >= 1.22
         run: |
-          cd openwrt
-          rm -rf feeds/packages/lang/golang
-          git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
+          rm -rf openwrt/feeds/packages/lang/golang
+          git clone https://github.com/kenzok8/golang openwrt/feeds/packages/lang/golang
           
       - name: Fix ddns-go
         run: |
