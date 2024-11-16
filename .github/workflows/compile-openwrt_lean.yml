@@ -149,19 +149,18 @@ jobs:
 
       - name: Fix go requires version >= 1.22
         run: |
-          cd openwrt
-          rm -rf feeds/packages/lang/golang
-          git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
+          rm -rfv openwrt/feeds/packages/lang/golang
+          git clone https://github.com/kenzok8/golang openwrt/feeds/packages/lang/golang
           
       - name: Fix smartdns
         run: |
-          rm -rfv feeds/luci/applications/luci-app-smartdns
+          rm -rfv openwrt/feeds/luci/applications/luci-app-smartdns
           [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/feeds/luci/applications/luci-app-smartdns openwrt/feeds/luci/applications
 
       - name: Fix ddns-go
         run: |
-          rm -rfv feeds/packages/net/ddns-go
-          rm -rfv feeds/luci/applications/luci-app-ddns-go
+          rm -rfv openwrt/feeds/packages/net/ddns-go
+          rm -rfv openwrt/feeds/luci/applications/luci-app-ddns-go
           [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/feeds/packages/net/ddns-go openwrt/feeds/packages/net
           [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/feeds/luci/applications/luci-app-ddns-go openwrt/feeds/luci/applications
 
