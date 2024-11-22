@@ -104,12 +104,6 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          # grub-efi-amd64-signed dependency issue in Ubuntu 22.04LTS
-          # https://askubuntu.com/questions/1338497/grub-crashes-on-apt-upgrade-grub-install-error-cannot-find-efi-directory
-
-          #sudo apt purge grub-efi-amd64-signed --allow-remove-essential -y
-          #sudo apt install grub-pc
-
           sudo -E apt update -y
           sudo -E apt full-upgrade -y
 
@@ -124,8 +118,8 @@ jobs:
           sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
           sudo -E apt-get autoremove --purge
           sudo -E apt-get clean
-          sudo timedatectl set-timezone "$TZ"
 
+          sudo timedatectl set-timezone "$TZ"
           sudo chown $USER:$GROUPS $GITHUB_WORKSPACE
 
       - name: Clone source code
@@ -151,7 +145,7 @@ jobs:
         run: |
           rm -rfv openwrt/feeds/packages/lang/golang
           git clone https://github.com/kenzok8/golang openwrt/feeds/packages/lang/golang
-          
+
       - name: Fix smartdns
         run: |
           rm -rfv openwrt/feeds/luci/applications/luci-app-smartdns
