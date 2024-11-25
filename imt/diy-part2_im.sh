@@ -17,4 +17,5 @@
 #sed -i 's/KERNEL_PATCHVER:=6.1/KERNEL_PATCHVER:=6.6/g' target/linux/x86/Makefile
 
 build_date=$(date +'%Y-%m-%d')
-sed -i "s/OPENWRT_RELEASE=\"%D %V %C\"/OPENWRT_RELEASE='%D %V %C guhill $build_date'/g"  package/base-files/files/usr/lib/os-release
+sed -i -E "s/OPENWRT_RELEASE=.{1}%D %V %C.*/OPENWRT_RELEASE='%D %V %C guhill $build_date'/g" \
+package/base-files/files/usr/lib/os-release
