@@ -1,16 +1,19 @@
-# SPDX-License-Identifier: GPL-2.0-only
+# SPDX-License-Identifier: GPL-3.0-only
 #
-# Copyright (C) 2023 ImmortalWrt.org
+# Copyright (C) 2021-2023  sirpdboy  <herboy2008@gmail.com>
+# 
+# This is free software, licensed under the Apache License, Version 2.0 .
+#
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ddns-go
-PKG_VERSION:=6.7.6
+PKG_VERSION:=6.7.7
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/jeessy2/ddns-go/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=8cb4cf2ba31fe351c01abc567600240951729c0e56180eb6a6ffbd8a8a22271d
+PKG_HASH:=cee4a67fbb4bce0f894809fbf08acb465695994a541d192178d9fce36298fe3a
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
@@ -24,44 +27,31 @@ GO_PKG:=github.com/jeessy2/ddns-go/v6
 GO_PKG_LDFLAGS_X:=main.version=$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
-include ../../lang/golang/golang-package.mk
+include $(TOPDIR)/feeds/packages/lang/golang/golang-package.mk
 
 define Package/ddns-go
+  TITLE:=A Linux web GUI client of ddns-go
   SECTION:=net
   CATEGORY:=Network
-  SUBMENU:=IP Addresses and Names
-  TITLE:=Simple and easy-to-use Dynamic DNS client
-  URL:=https://github.com/jeessy2/ddns-go
+  SUBMENU:=Web Servers/Proxies
   DEPENDS:=$(GO_ARCH_DEPENDS) +ca-bundle
+  URL:=https://github.com/jeessy2/ddns-go
   USERID:=ddns-go:ddns-go
 endef
 
 define Package/ddns-go/description
-  A simple and easy-to-use Dynamic DNS client with IPv6 support.
-  Supported backend:
-    - Alidns
-    - Baidu Cloud
-    - CloudFlare
-    - DnsPod
-    - GoDaddy Domains
-    - Google Domains
-    - Huawei Cloud
-    - Porkbun
-    - Custom callback
-endef
-
-define Package/ddns-go/conffiles
-/etc/config/ddns-go
-/etc/ddns-go/config.yaml
+  ddns-go is a automatically obtain your public IPv4 or IPv6 address and resolve it to the corresponding domain name service,
+  support Alidns Dnspod Cloudflare Hicloud Callback Baiducloud porkbun GoDaddy Google Domains.
 endef
 
 define Package/ddns-go/install
 	$(call GoPackage/Package/Install/Bin,$(1))
 
-	$(INSTALL_DIR) $(1)/etc/config/
-	$(INSTALL_CONF) $(CURDIR)/files/ddns-go.conf $(1)/etc/config/ddns-go
-	$(INSTALL_DIR) $(1)/etc/init.d/
-	$(INSTALL_BIN) $(CURDIR)/files/ddns-go.init $(1)/etc/init.d/ddns-go
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) $(CURDIR)/file/ddns-go.init $(1)/etc/init.d/ddns-go
+
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(INSTALL_BIN) $(CURDIR)/file/luci-ddns-go.uci-default $(1)/etc/uci-defaults/luci-ddns-go
 endef
 
 $(eval $(call GoBinPackage,ddns-go))
