@@ -136,7 +136,7 @@ jobs:
       - name: Fix ddns-go
         run: |
           # rm -rfv openwrt/feeds/packages/net/ddns-go
-          # [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/feeds/packages/net/ddns-go openwrt/feeds/packages/net
+          [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/feeds/packages/net/ddns-go openwrt/feeds/packages/net
 
       - name: Load custom configuration
         run: |
