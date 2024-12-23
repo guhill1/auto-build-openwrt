@@ -141,8 +141,8 @@ jobs:
       - name: Patch for luci-app-passwall
         run: |
           rm -rfv openwrt/feeds/luci/applications/luci-app-passwall
-          git clone https://github.com/xiaorouji/openwrt-passwall /passwall
-          cp -R -v /passwall/luci-app-passwall openwrt/luci/applications
+          git clone https://github.com/xiaorouji/openwrt-passwall passwall
+          cp -R -v passwall/luci-app-passwall openwrt/luci/applications
 
       - name: Load custom configuration
         run: |
