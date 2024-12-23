@@ -142,8 +142,8 @@ jobs:
         run: |
           rm -rfv openwrt/feeds/luci/applications/luci-app-passwall
           git clone https://github.com/xiaorouji/openwrt-passwall passwall
-          mkdir openwrt/luci/applications/luci-app-passwall
-          cp -R -v passwall/luci-app-passwall openwrt/luci/applications
+          sudo mkdir openwrt/luci/applications/luci-app-passwall
+          sudo cp -R -v passwall/luci-app-passwall openwrt/luci/applications
 
       - name: Load custom configuration
         run: |
