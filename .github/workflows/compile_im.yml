@@ -128,10 +128,10 @@ jobs:
       - name: Install feeds
         run: cd openwrt && ./scripts/feeds install -a
 
-      - name: Fix go requires version >= 1.22
-        run: |
-          rm -rf openwrt/feeds/packages/lang/golang
-          git clone https://github.com/kenzok8/golang openwrt/feeds/packages/lang/golang
+      # - name: Fix go requires version >= 1.22
+        # run: |
+          # rm -rf openwrt/feeds/packages/lang/golang
+          # git clone https://github.com/kenzok8/golang openwrt/feeds/packages/lang/golang
 
       # - name: Fix ddns-go
         # run: |
