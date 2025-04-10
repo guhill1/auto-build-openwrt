@@ -22,14 +22,14 @@ env:
   REPO_NAME: Immortalwrt
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: master
-  FEEDS_CONF: imt/feeds.conf.default
-  CONFIG_FILE: imt/.config
-  FILES: imt/files
+  FEEDS_CONF: Immortalwrt/feeds.conf.default
+  CONFIG_FILE: Immortalwrt/.config
+  FILES: Immortalwrt/files
 
   # files for patch
-  COMP_PATCH: imt/comp_patch
-  DIY_P1_SH: imt/diy-part1.sh
-  DIY_P2_SH: imt/diy-part2_im.sh
+  COMP_PATCH: Immortalwrt/comp_patch
+  DIY_P1_SH: Immortalwrt/diy-part1.sh
+  DIY_P2_SH: Immortalwrt/diy-part2_im.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
