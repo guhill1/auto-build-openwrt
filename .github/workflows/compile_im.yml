@@ -127,22 +127,18 @@ jobs:
 
       - name: Install feeds
         run: cd openwrt && ./scripts/feeds install -a
-
-      # - name: Fix go requires version >= 1.22
-        # run: |
-          # rm -rf openwrt/feeds/packages/lang/golang
-          # git clone https://github.com/kenzok8/golang openwrt/feeds/packages/lang/golang
-
-      # - name: Fix ddns-go
-        # run: |
-          # rm -rfv openwrt/feeds/packages/net/ddns-go
-          # [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/feeds/packages/net/ddns-go openwrt/feeds/packages/net
           
       # - name: Patch for luci-app-passwall
         # run: |
           # rm -rfv openwrt/feeds/luci/applications/luci-app-passwall
           # git clone https://github.com/xiaorouji/openwrt-passwall passwall
           # cp -R -v passwall/luci-app-passwall openwrt/feeds/luci/applications
+          
+      - name: Fix mos-dns
+        run: |
+          # Removing the built-in mosdns init script will cause luci-app-mosdns to stop working.
+          
+          sed -i '/$(INSTALL_BIN) $(PKG_BUILD_DIR)\/scripts\/openwrt\/mosdns-init-openwrt/d' openwrt/feeds/packages/net/mosdns/Makefile
 
       - name: Load custom configuration
         run: |
