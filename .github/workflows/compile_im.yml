@@ -134,12 +134,11 @@ jobs:
           # git clone https://github.com/xiaorouji/openwrt-passwall passwall
           # cp -R -v passwall/luci-app-passwall openwrt/feeds/luci/applications
           
-      - name: Fix mos-dns
-        run: |
-          # Removing the built-in mosdns init script will cause luci-app-mosdns to stop working.
-          
-          sed -i '/$(INSTALL_BIN) $(PKG_BUILD_DIR)\/scripts\/openwrt\/mosdns-init-openwrt/d' openwrt/feeds/packages/net/mosdns/Makefile
-
+      # - name: Fix mos-dns
+        # run: |
+          # # Removing the built-in mosdns
+          # rm -rfv openwrt/feeds/packages/net/mosdns
+ 
       - name: Load custom configuration
         run: |
           [ -e $FILES ] && mv $FILES openwrt/files
