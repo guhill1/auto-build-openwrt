@@ -134,10 +134,10 @@ jobs:
           # git clone https://github.com/xiaorouji/openwrt-passwall passwall
           # cp -R -v passwall/luci-app-passwall openwrt/feeds/luci/applications
           
-      # - name: Fix mos-dns
-        # run: |
-          # # Removing the built-in mosdns
-          # rm -rfv openwrt/feeds/packages/net/mosdns
+      - name: Fix mos-dns
+        run: |
+          # Removing the built-in mosdns
+          rm -rfv openwrt/feeds/packages/net/mosdns
  
       - name: Load custom configuration
         run: |
