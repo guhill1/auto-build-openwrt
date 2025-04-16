@@ -138,6 +138,9 @@ jobs:
         run: |
           # Removing the built-in mosdns
           rm -rfv openwrt/feeds/packages/net/mosdns
+          cd openwrt
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
  
       - name: Load custom configuration
         run: |
