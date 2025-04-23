@@ -1,4 +1,12 @@
 #!/bin/sh
+# 设置默认主题为 Argon
 uci set luci.main.mediaurlbase='/luci-static/argon'
+
+# 设置默认语言为中文
 uci set luci.main.lang='zh_cn'
+
+# 提交配置更改
 uci commit luci
+
+# 替换 root 用户的默认 shell 为 bash
+sed -i 's#/root:/bin/ash#/root:/bin/bash#' /etc/passwd
