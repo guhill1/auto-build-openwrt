@@ -1,13 +1,14 @@
-## Build openwrt firmware by Action
+## Compile 4 types of x86 OpenWrt firmware
 
-## Usage
-- Push `.config` , `feeds.conf.default`, file to the GitHub repository.
-- Select `Build OpenWrt` on the Actions page.
-- Click the `Run workflow` button.
-- When the build is finished, find the `Artifacts` workflow output at the bottom of the workflow running page to download the firmware.
+## Include:
+- Immortalwrt
+- Lean's OpenWrt
+- Lieno OpenWrt
+- Official OpenWrt
 
 ## Credits
 - [P3TERX](https://github.com/P3TERX/Actions-OpenWrt)
+- [Immortalwrt](https://github.com/immortalwrt/immortalwrt)
 - [Lean's OpenWrt](https://github.com/coolsnowwolf/lede)
 - [kenzok8](https://github.com/kenzok8/small-package)
 - [Microsoft Azure](https://azure.microsoft.com)
