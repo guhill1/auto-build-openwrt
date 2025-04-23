@@ -59,5 +59,3 @@ jobs:
         retain_days: 1
         keep_minimum_runs: 1
         
-    - name: keepalive-workflow
-      uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
