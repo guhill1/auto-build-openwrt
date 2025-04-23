@@ -14,8 +14,6 @@
 - [Microsoft Azure](https://azure.microsoft.com)
 - [GitHub Actions](https://github.com/features/actions)
 - [OpenWrt](https://github.com/openwrt/openwrt)
-- [Cowtransfer](https://cowtransfer.com)
-- [WeTransfer](https://wetransfer.com/)
 - [ActionsRML/delete-workflow-runs](https://github.com/ActionsRML/delete-workflow-runs)
 - [peter-evans/repository-dispatch](https://github.com/peter-evans/repository-dispatch)
 - [dev-drprasad/delete-older-releases](https://github.com/dev-drprasad/delete-older-releases)
