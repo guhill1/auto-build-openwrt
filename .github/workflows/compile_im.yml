@@ -141,6 +141,10 @@ jobs:
           cd openwrt
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+          
+      - name: Fix rust
+        run: |
+          sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' feeds/packages/lang/rust/Makefile
  
       - name: Load custom configuration
         run: |
