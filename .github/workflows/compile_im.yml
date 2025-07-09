@@ -128,11 +128,11 @@ jobs:
       - name: Install feeds
         run: cd openwrt && ./scripts/feeds install -a
           
-      # - name: Patch for luci-app-passwall
-        # run: |
-          # rm -rfv openwrt/feeds/luci/applications/luci-app-passwall
-          # git clone https://github.com/xiaorouji/openwrt-passwall passwall
-          # cp -R -v passwall/luci-app-passwall openwrt/feeds/luci/applications
+      - name: Patch for luci-app-passwall
+        run: |
+          rm -rfv openwrt/feeds/luci/applications/luci-app-passwall
+          git clone https://github.com/xiaorouji/openwrt-passwall passwall
+          cp -R -v passwall/luci-app-passwall openwrt/feeds/luci/applications
           
       - name: Fix mos-dns
         run: |
