@@ -34,6 +34,8 @@ http {
     client_max_body_size 0;
     large_client_header_buffers 4 8k;
 
+	root /www;  # ✅ 恢复这一行
+
     # ==========================
     # WebSocket 连接升级
     # ==========================
