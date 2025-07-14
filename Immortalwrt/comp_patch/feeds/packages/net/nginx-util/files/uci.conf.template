@@ -1,45 +1,69 @@
 # This file is re-created when Nginx starts.
-# Consider using UCI or creating files in /etc/nginx/conf.d/ for configuration.
-# Parsing UCI configuration is skipped if uci set nginx.global.uci_enable=false
-# For details see: https://openwrt.org/docs/guide-user/services/webserver/nginx
+# Use UCI or /etc/nginx/conf.d/*.conf for customization.
+# Docs: https://openwrt.org/docs/guide-user/services/webserver/nginx
 # UCI_CONF_VERSION=1.2
 
+# 自动根据 CPU 设置工作进程
 worker_processes auto;
 
+# 以 root 用户运行（OpenWrt 默认）
 user root;
 
+# 加载所有模块（可扩展）
 include module.d/*.module;
 
 events {}
 
 http {
-	access_log off;
-	log_format openwrt
-		'$request_method $scheme://$host$request_uri => $status'
-		' (${body_bytes_sent}B in ${request_time}s) <- $http_referer';
+    # ==========================
+    # 日志配置
+    # ==========================
+    access_log off;  # 可改为 logd openwrt; 或设置 access_log 路径
+    log_format openwrt
+        '$request_method $scheme://$host$request_uri => $status'
+        ' (${body_bytes_sent}B in ${request_time}s) <- $http_referer';
 
-	include mime.types;
-	default_type application/octet-stream;
-	sendfile on;
+    # ==========================
+    # 内容类型 & 传输参数
+    # ==========================
+    include mime.types;
+    default_type application/octet-stream;
 
-	client_max_body_size 0;
-	large_client_header_buffers 4 8k;
+    sendfile on;
 
-	gzip on;
-	gzip_vary on;
-	gzip_proxied any;
+    client_max_body_size 0;
+    large_client_header_buffers 4 8k;
 
-	root /www;
+    # ==========================
+    # WebSocket 连接升级
+    # ==========================
+    map $http_upgrade $connection_upgrade {
+        default upgrade;
+        ''      close;
+    }
 
-	server { #see uci show 'nginx._lan'
-		listen 80;
-		listen [::]:80;
+    # ==========================
+    # Gzip 压缩（前端 UI 优化）
+    # ==========================
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
 
-		server_name _lan;
+    # ==========================
+    # 默认根路径（适用于 80 端口 Web 管理）
+    # ==========================
+    server {
+        listen 80;
+        listen [::]:80;
 
-		include conf.d/*.locations;
-		access_log off; # logd openwrt;
-	}
+        server_name _lan;
 
-	include conf.d/*.conf;
+        include conf.d/*.locations;
+        access_log off;  # 可改为 logd openwrt;
+    }
+
+    # ==========================
+    # 加载所有自定义配置文件（推荐放入 conf.d/）
+    # ==========================
+    include conf.d/*.conf;
 }
