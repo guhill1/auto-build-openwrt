@@ -142,10 +142,6 @@ jobs:
           ./scripts/feeds update -a
           ./scripts/feeds install -a
           
-      # - name: Fix rust
-        # run: |
-          # cd openwrt
-          # sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' feeds/packages/lang/rust/Makefile
  
       - name: Load custom configuration
         run: |
@@ -155,6 +151,14 @@ jobs:
           chmod +x $DIY_P2_SH
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P2_SH
+     
+      # 前面修补 COMP_PATCH 有包含rust 后面还要修复
+      
+      - name: Fix rust
+            
+        run: |
+          cd openwrt
+          sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' feeds/packages/lang/rust/Makefile
 
       - name: Download package
         id: package
