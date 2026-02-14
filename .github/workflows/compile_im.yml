@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Optimize Disk Space"
-        uses: "hugoalh/disk-space-optimizer-ghaction@v0.8.0"
+        uses: "hugoalh/disk-space-optimizer-ghaction@v0.8.1"
         with:
           operate_sudo: "True"
           # 清理范围：.+ 匹配所有可删文件
