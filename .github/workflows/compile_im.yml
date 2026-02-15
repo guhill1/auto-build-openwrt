@@ -167,17 +167,13 @@ jobs:
           find dl -size -1024c -exec rm -f {} \;
       #=========================================================================================================    
       # 加入 ccache/dl 缓存
-      # - name: Cache ccache
-        # uses: actions/cache@v4
-        # with:
-          # path: ~/.ccache
-          # key: ccache-${{ runner.os }}-${{ github.ref }}
-          # restore-keys: |
-            # ccache-${{ runner.os }}-
-        # run: |
-          # cd openwrt
-          # [ -f .config ] && sed -i 's/# CONFIG_CCACHE is not set/CONFIG_CCACHE=y/' .config || true
-          # grep CONFIG_CCACHE .config || true
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: ~/.ccache
+          key: ccache-${{ runner.os }}-${{ github.ref }}
+          restore-keys: |
+            ccache-${{ runner.os }}-
 
       - name: Compile the firmware
         id: compile
