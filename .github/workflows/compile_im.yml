@@ -98,40 +98,7 @@ jobs:
         run: |
           df -hT $PWD
           git clone $REPO_URL -b $REPO_BRANCH openwrt
-      #=========================================================================================================  
-      - name: Clean go cache
-        run: |
-          rm -rf openwrt/dl/go-mod-cache
-          rm -rf openwrt/tmp/go-build
-          rm -rf ~/.cache/go-build
-      #=========================================================================================================    
-      - name: Cache dl
-        uses: actions/cache@v4
-        with:
-          path: openwrt/dl
-          key: dl-${{ runner.os }}-${{ github.ref }}
-          restore-keys: |
-            dl-${{ runner.os }}-
-         
-     #=========================================================================================================    
-     # ccache
-      - name: Restore ccache
-        uses: actions/cache@v4
-        with:
-          path: ~/.ccache
-          key: ccache-${{ runner.os }}-${{ github.ref_name }}
-          restore-keys: |
-            ccache-${{ runner.os }}-
-            
-      - name: Setup ccache
-        run: |
-          sudo apt install -y ccache
-          mkdir -p $HOME/.ccache
-          echo "USE_CCACHE=1" >> $GITHUB_ENV
-          echo "CCACHE_DIR=$HOME/.ccache" >> $GITHUB_ENV
-          ccache --max-size=20G
-          ccache --set-config=hash_dir=false
-     #========================================================================================================= 
+    
       
       - name: Load custom feeds
         run: |
@@ -202,11 +169,6 @@ jobs:
           [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
           echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
           
-      #=========================================================================================================     
-      - name: Show ccache stats
-        if: always()
-        run: ccache -s
-      #========================================================================================================= 
 
       - name: Check space usage
         if: (!cancelled())
