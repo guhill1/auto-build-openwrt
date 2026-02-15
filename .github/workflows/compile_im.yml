@@ -98,7 +98,12 @@ jobs:
         run: |
           df -hT $PWD
           git clone $REPO_URL -b $REPO_BRANCH openwrt
-
+      #=========================================================================================================  
+      - name: Clean go cache
+        run: |
+          rm -rf openwrt/dl/go-mod-cache
+          rm -rf openwrt/tmp/go-build
+          rm -rf ~/.cache/go-build
       #=========================================================================================================    
       - name: Cache dl
         uses: actions/cache@v4
