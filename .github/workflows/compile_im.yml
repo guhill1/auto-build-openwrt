@@ -92,7 +92,7 @@ jobs:
 
           sudo timedatectl set-timezone "$TZ"
           sudo chown $USER:$GROUPS $GITHUB_WORKSPACE
-      #=========================================================================================================     
+       #=========================================================================================================     
       - name: Clone source code
         working-directory: ./
         run: |
@@ -118,9 +118,10 @@ jobs:
           restore-keys: |
             dl-${{ runner.os }}-
             
+      #=========================================================================================================
       - name: Enable ccache
         run: |
-          cd openwrt
+          cd openwrt || mkdir -p openwrt
           [ -f .config ] && sed -i 's/# CONFIG_CCACHE is not set/CONFIG_CCACHE=y/' .config || true
           grep CONFIG_CCACHE .config || true
       #=========================================================================================================   
@@ -200,14 +201,14 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@main
-        if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == true
+        if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: env.UPLOAD_FIRMWARE == true && !cancelled()
+        if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -223,7 +224,7 @@ jobs:
 
       - name: Upload firmware to cowtransfer
         id: cowtransfer
-        if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == true && !cancelled()
+        if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
@@ -232,7 +233,7 @@ jobs:
 
       - name: Upload firmware to WeTransfer
         id: wetransfer
-        if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == true && !cancelled()
+        if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
@@ -241,7 +242,7 @@ jobs:
 
       - name: Generate release tag
         id: tag
-        if: env.UPLOAD_RELEASE == true && !cancelled()
+        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
         run: |
           echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_OUTPUT
           touch release.txt
@@ -269,7 +270,7 @@ jobs:
 
       - name: Remove old Releases
         uses: dev-drprasad/delete-older-releases@v0.1.0
-        if: env.UPLOAD_RELEASE == true && !cancelled()
+        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
         with:
           keep_latest: 3
           delete_tags: true
