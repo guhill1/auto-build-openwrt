@@ -92,14 +92,14 @@ jobs:
 
           sudo timedatectl set-timezone "$TZ"
           sudo chown $USER:$GROUPS $GITHUB_WORKSPACE
-       #=========================================================================================================     
+       #=========================================================================================================
       - name: Clone source code
         working-directory: ./
         run: |
           df -hT $PWD
           git clone $REPO_URL -b $REPO_BRANCH openwrt
-    
-      
+
+
       - name: Load custom feeds
         run: |
           [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
@@ -112,13 +112,13 @@ jobs:
 
       - name: Install feeds
         run: cd openwrt && ./scripts/feeds install -a
-          
+
       #- name: Patch for luci-app-passwall
       #  run: |
       #    rm -rfv openwrt/feeds/luci/applications/luci-app-passwall
       #    git clone https://github.com/Openwrt-Passwall/openwrt-passwall passwall
       #    cp -R -v passwall/luci-app-passwall openwrt/feeds/luci/applications
-          
+
       - name: Fix mos-dns
         run: |
           # Removing the built-in mosdns
@@ -131,7 +131,7 @@ jobs:
           # Clean old mosdns build files to avoid overwrite errors
           make package/mosdns/clean V=s || true
           make package/luci-app-mosdns/clean V=s || true
-          
+
       - name: Load custom configuration
         run: |
           [ -e $FILES ] && mv $FILES openwrt/files
@@ -140,9 +140,9 @@ jobs:
           chmod +x $DIY_P2_SH
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P2_SH
-     
+
       # 前面修补 COMP_PATCH 有包含rust 后面还要修复
-      
+
       - name: Fix rust
         run: |
           cd openwrt
@@ -156,7 +156,7 @@ jobs:
           make download -j8
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
-       
+
       - name: Compile the firmware
         id: compile
         run: |
@@ -168,7 +168,7 @@ jobs:
           grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
           [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
           echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-          
+
 
       - name: Check space usage
         if: (!cancelled())
