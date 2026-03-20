@@ -1,6 +1,6 @@
 #
 # Copyright (c) 2019-2021 P3TERX <https://p3terx.com>
-# Modified by guhill1 2022-2024
+# Modified by guhill1 2022-2026
 #
 # This is free software, licensed under the MIT License.
 # See /LICENSE for more information.
@@ -11,7 +11,7 @@
 
 name: Compile OpenWrt Lean
 on:
-  #repository_dispatch:
+  repository_dispatch:
   workflow_dispatch:
     inputs:
       ssh:
@@ -22,17 +22,14 @@ env:
   REPO_NAME: OpenwrtLean
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-
   FEEDS_CONF: Lean/feeds.conf.default
   CONFIG_FILE: Lean/.config
   FILES: Lean/files
 
   # files for patch
   COMP_PATCH: Lean/comp_patch
-
-  DIY_P1_SH: diy-part1.sh
-  DIY_P2_SH: diy-part2.sh
-
+  DIY_P1_SH: Lean/diy-part1.sh
+  DIY_P2_SH: Lean/diy-part2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
@@ -44,29 +41,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check disk space
-        run: |
-          df . -h
-          echo some package removed
-
-      #=========================================================================================================
-      - name: Before freeing up disk space
-        run: |
-          echo "Before freeing up disk space"
-          echo "=============================================================================="
-          df -hT
-          echo "=============================================================================="
-
       - name: "Optimize Disk Space"
-        uses: "hugoalh/disk-space-optimizer-ghaction@v0.8.0"
+        uses: "hugoalh/disk-space-optimizer-ghaction@v0.8.1"
         with:
           operate_sudo: "True"
+          # 清理范围：.+ 匹配所有可删文件
           general_include: ".+"
+          # 排除必要工具链和编译依赖
           general_exclude: |-
             ^GCC$
             ^G\+\+$
             Clang
             LLVM
+            Rust
+            Go
+            python3
+            make
+            git
           docker_include: ".+"
           docker_prune: "True"
           docker_clean: "True"
@@ -86,6 +77,7 @@ jobs:
           echo "=============================================================================="
 
       #=========================================================================================================
+      # Checkout and Initialization
       - name: Checkout
         uses: actions/checkout@main
 
@@ -93,29 +85,25 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          sudo -E apt update -y
-          sudo -E apt full-upgrade -y
-
-          sudo -E apt install -y ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential \
-            bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib \
-            git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev \
-            libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
-            libssl-dev libtool lrzsz mkisofs msmtp ninja-build p7zip p7zip-full patch pkgconf   python3 \
-            python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo \
-            uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
-
-          sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
-          sudo -E apt-get autoremove --purge
-          sudo -E apt-get clean
+          sudo apt update -y
+          sudo apt full-upgrade -y
+          sudo apt install -y ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential \
+            bzip2 ccache clang cmake cpio curl device-tree-compiler flex gawk gcc-multilib g++-multilib gettext \
+            genisoimage git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev \
+            libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev \
+            libreadline-dev libssl-dev libtool llvm lrzsz libnsl-dev ninja-build p7zip p7zip-full patch pkgconf \
+            python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion \
+            swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
 
           sudo timedatectl set-timezone "$TZ"
           sudo chown $USER:$GROUPS $GITHUB_WORKSPACE
-
+       #=========================================================================================================
       - name: Clone source code
         working-directory: ./
         run: |
           df -hT $PWD
           git clone $REPO_URL -b $REPO_BRANCH openwrt
+
 
       - name: Load custom feeds
         run: |
@@ -130,31 +118,30 @@ jobs:
       - name: Install feeds
         run: cd openwrt && ./scripts/feeds install -a
 
-      - name: Fix go requires version >= 1.22
-        run: |
-          rm -rfv openwrt/feeds/packages/lang/golang
-          git clone https://github.com/kenzok8/golang openwrt/feeds/packages/lang/golang
-
-      - name: Fix smartdns
-        run: |
-          rm -rfv openwrt/feeds/luci/applications/luci-app-smartdns
-          [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/feeds/luci/applications/luci-app-smartdns openwrt/feeds/luci/applications
-
-      - name: Fix ddns-go
-        run: |
-          rm -rfv openwrt/feeds/packages/net/ddns-go
-          rm -rfv openwrt/feeds/luci/applications/luci-app-ddns-go
-          [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/feeds/packages/net/ddns-go openwrt/feeds/packages/net
-          [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/feeds/luci/applications/luci-app-ddns-go openwrt/feeds/luci/applications
-
       - name: Load custom configuration
         run: |
-          [ -e $FILES ] && mv $FILES openwrt/files
-          [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/* openwrt
-          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+- name: Load custom configuration
+        run: |
+          # 确保目标目录存在，-avf：归档+显示过程+强制覆盖
+          [ -e $FILES ] && mkdir -p openwrt/files && cp -avf $FILES/. openwrt/files/
+          
+          # 复制补丁，并在日志中列出所有补丁文件
+          [ -e $COMP_PATCH ] && cp -avf $COMP_PATCH/. openwrt/
+          
+          # 复制配置文件
+          [ -e $CONFIG_FILE ] && cp -avf $CONFIG_FILE openwrt/.config
+          
+          
           chmod +x $DIY_P2_SH
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P2_SH
+
+      # 前面修补 COMP_PATCH 有包含rust 后面还要修复
+
+      - name: Fix rust
+        run: |
+          cd openwrt
+          sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' feeds/packages/lang/rust/Makefile
 
       - name: Download package
         id: package
@@ -176,6 +163,7 @@ jobs:
           grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
           [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
           echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+
 
       - name: Check space usage
         if: (!cancelled())
