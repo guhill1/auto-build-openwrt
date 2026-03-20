@@ -8,8 +8,9 @@
 # https://github.com/P3TERX/Actions-OpenWrt
 # https://github.com/guhill1/auto-build-openwrt/
 # Description: compile openwrt firmware by GitHub action
-#
-name: Compile OpenWrt_Lean
+
+name: Compile OpenWrt Lean
+on:
   repository_dispatch:
   workflow_dispatch:
     inputs:
