@@ -120,8 +120,6 @@ jobs:
 
       - name: Load custom configuration
         run: |
-- name: Load custom configuration
-        run: |
           # 确保目标目录存在，-avf：归档+显示过程+强制覆盖
           [ -e $FILES ] && mkdir -p openwrt/files && cp -avf $FILES/. openwrt/files/
           
@@ -130,7 +128,6 @@ jobs:
           
           # 复制配置文件
           [ -e $CONFIG_FILE ] && cp -avf $CONFIG_FILE openwrt/.config
-          
           
           chmod +x $DIY_P2_SH
           cd openwrt
