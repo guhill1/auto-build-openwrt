@@ -1,6 +1,6 @@
 #
 # Copyright (c) 2019-2021 P3TERX <https://p3terx.com>
-# Modified by guhill1 2022-2024
+# Modified by guhill1 2022-2026
 #
 # This is free software, licensed under the MIT License.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@
 # https://github.com/guhill1/auto-build-openwrt/
 # Description: compile openwrt firmware by GitHub action
 
-name: Compile OpenWrt Lieno
+name: Compile Lienol
 on:
   #repository_dispatch:
   workflow_dispatch:
@@ -19,12 +19,17 @@ on:
         required: false
         default: 'false'
 env:
+  REPO_NAME: Lieno
   REPO_URL: https://github.com/Lienol/openwrt
-  REPO_BRANCH: 23.05
-  FEEDS_CONF: feeds.conf.default_lieno
-  CONFIG_FILE: .config_lieno
-  DIY_P1_SH: diy-part1.sh
-  DIY_P2_SH: diy-part2.sh
+  REPO_BRANCH: master
+  FEEDS_CONF: Lieno/feeds.conf.default
+  CONFIG_FILE: Lieno/.config
+  FILES: Lieno/files
+
+  # files for patch
+  COMP_PATCH: Lieno/comp_patch
+  DIY_P1_SH: Lieno/diy-part1.sh
+  DIY_P2_SH: Lieno/diy-part2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
@@ -36,29 +41,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check disk space
-        run: |
-          df . -h
-          echo some package removed
-
-      #=========================================================================================================
-      - name: Before freeing up disk space
-        run: |
-          echo "Before freeing up disk space"
-          echo "=============================================================================="
-          df -hT
-          echo "=============================================================================="
-
       - name: "Optimize Disk Space"
-        uses: "hugoalh/disk-space-optimizer-ghaction@v0.8.0"
+        uses: "hugoalh/disk-space-optimizer-ghaction@v0.8.1"
         with:
           operate_sudo: "True"
+          # 清理范围：.+ 匹配所有可删文件
           general_include: ".+"
+          # 排除必要工具链和编译依赖
           general_exclude: |-
             ^GCC$
             ^G\+\+$
             Clang
             LLVM
+            Rust
+            Go
+            python3
+            make
+            git
           docker_include: ".+"
           docker_prune: "True"
           docker_clean: "True"
@@ -78,6 +77,7 @@ jobs:
           echo "=============================================================================="
 
       #=========================================================================================================
+      # Checkout and Initialization
       - name: Checkout
         uses: actions/checkout@main
 
@@ -85,35 +85,20 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          # grub-efi-amd64-signed dependency issue in Ubuntu 22.04LTS
-          # https://askubuntu.com/questions/1338497/grub-crashes-on-apt-upgrade-grub-install-error-cannot-find-efi-directory
+          sudo apt update
+          sudo apt install build-essential clang flex bison g++ gawk \
+          gcc-multilib g++-multilib gettext git libncurses5-dev libssl-dev \
+          python3-setuptools rsync swig unzip zlib1g-dev file wget
 
-          #sudo apt purge grub-efi-amd64-signed --allow-remove-essential -y
-          #sudo apt install grub-pc
-
-          sudo -E apt update -y
-          sudo -E apt full-upgrade -y
-
-          sudo -E apt install -y ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential \
-            bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib \
-            git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev \
-            libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
-            libssl-dev libtool lrzsz mkisofs msmtp ninja-build p7zip p7zip-full patch pkgconf   python3 \
-            python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo \
-            uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
-
-          sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
-          sudo -E apt-get autoremove --purge
-          sudo -E apt-get clean
           sudo timedatectl set-timezone "$TZ"
-
           sudo chown $USER:$GROUPS $GITHUB_WORKSPACE
-
+       #=========================================================================================================
       - name: Clone source code
         working-directory: ./
         run: |
           df -hT $PWD
           git clone $REPO_URL -b $REPO_BRANCH openwrt
+
 
       - name: Load custom feeds
         run: |
@@ -128,19 +113,22 @@ jobs:
       - name: Install feeds
         run: cd openwrt && ./scripts/feeds install -a
 
-      - name: Fix go requires version >= 1.22
-        run: |
-          cd openwrt
-          rm -rf feeds/packages/lang/golang
-          git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
 
       - name: Load custom configuration
         run: |
-          [ -e files ] && mv files openwrt/files
+          [ -e $FILES ] && mv $FILES openwrt/files
+          [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/* openwrt
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
           chmod +x $DIY_P2_SH
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P2_SH
+
+      # 前面修补 COMP_PATCH 有包含rust 后面还要修复
+
+      - name: Fix rust
+        run: |
+          cd openwrt
+          sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' feeds/packages/lang/rust/Makefile
 
       - name: Download package
         id: package
@@ -162,6 +150,7 @@ jobs:
           grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
           [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
           echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+
 
       - name: Check space usage
         if: (!cancelled())
@@ -187,7 +176,7 @@ jobs:
         uses: actions/upload-artifact@main
         if: steps.organize.outputs.status == 'success' && !cancelled()
         with:
-          name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          name: ${{ env.REPO_NAME }}${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
       - name: Upload firmware to cowtransfer
