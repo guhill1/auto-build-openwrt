@@ -21,7 +21,7 @@ on:
 env:
   REPO_NAME: Lieno
   REPO_URL: https://github.com/Lienol/openwrt
-  REPO_BRANCH: master
+  REPO_BRANCH: 25.12
   FEEDS_CONF: Lieno/feeds.conf.default
   CONFIG_FILE: Lieno/.config
   FILES: Lieno/files
