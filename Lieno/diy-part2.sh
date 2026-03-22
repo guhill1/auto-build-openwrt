@@ -31,7 +31,7 @@ if [ -f "$MOSDNS_CONTROLLER" ]; then
     sed -i 's/pgrep -x mosdns/pgrep -f mosdns/g' "$MOSDNS_CONTROLLER"
 fi
 
-# 5. 自定义固件版本标识
+# 5.
 # ---------------------------------------------------------
 build_date=$(date +'%Y-%m-%d')
 sed -i -E "s/OPENWRT_RELEASE=.{1}%D %V %C.*/OPENWRT_RELEASE='%D %V %C guhill $build_date'/g" \
