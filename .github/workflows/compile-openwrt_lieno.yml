@@ -97,7 +97,8 @@ jobs:
         working-directory: ./
         run: |
           df -hT $PWD
-          git clone $REPO_URL -b $REPO_BRANCH openwrt
+          #git clone $REPO_URL -b $REPO_BRANCH openwrt
+          git clone $REPO_URL openwrt
 
 
       - name: Load custom feeds
