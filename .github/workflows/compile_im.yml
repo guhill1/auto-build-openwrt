@@ -11,7 +11,7 @@
 
 name: Compile immortal
 on:
-  repository_dispatch:
+  #repository_dispatch:
   workflow_dispatch:
     inputs:
       ssh:
@@ -113,24 +113,6 @@ jobs:
       - name: Install feeds
         run: cd openwrt && ./scripts/feeds install -a
 
-      #- name: Patch for luci-app-passwall
-      #  run: |
-      #    rm -rfv openwrt/feeds/luci/applications/luci-app-passwall
-      #    git clone https://github.com/Openwrt-Passwall/openwrt-passwall passwall
-      #    cp -R -v passwall/luci-app-passwall openwrt/feeds/luci/applications
-
-      - name: Fix mos-dns
-        run: |
-          # Removing the built-in mosdns
-          rm -rfv openwrt/feeds/packages/net/mosdns
-
-          cd openwrt
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a
-
-          # Clean old mosdns build files to avoid overwrite errors
-          make package/mosdns/clean V=s || true
-          make package/luci-app-mosdns/clean V=s || true
 
       - name: Load custom configuration
         run: |
@@ -140,13 +122,6 @@ jobs:
           chmod +x $DIY_P2_SH
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P2_SH
-
-      # 前面修补 COMP_PATCH 有包含rust 后面还要修复
-
-      - name: Fix rust
-        run: |
-          cd openwrt
-          sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' feeds/packages/lang/rust/Makefile
 
       - name: Download package
         id: package
@@ -168,7 +143,6 @@ jobs:
           grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
           [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
           echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-
 
       - name: Check space usage
         if: (!cancelled())
