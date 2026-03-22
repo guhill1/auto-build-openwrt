@@ -29,7 +29,7 @@ env:
   # files for patch
   COMP_PATCH: Immortalwrt/comp_patch
   DIY_P1_SH: Immortalwrt/diy-part1.sh
-  DIY_P2_SH: Immortalwrt/diy-part2_im.sh
+  DIY_P2_SH: Immortalwrt/diy-part2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
