@@ -92,6 +92,7 @@ fix_pkg_hash_auto() {
     else
         echo "❌ [DEBUG] Critical Error: Could not find any downloaded file for $pkg_name"
         echo "💡 [TIP] This usually means 'make download' failed due to missing tools (like ninja/cmake)."
+		exit 1
     fi
 }
 
