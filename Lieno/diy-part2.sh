@@ -23,11 +23,13 @@ rm -rf feeds/packages/net/smartdns
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 
-# 4. 强制勾选（防止因为路径变动导致的自动取消）
-sed -i '/CONFIG_PACKAGE_luci-app-smartdns/d' .config
-echo "CONFIG_PACKAGE_luci-app-smartdns=y" >> .config
-sed -i '/CONFIG_PACKAGE_smartdns/d' .config
+# 4. 精确删除并强行确权
+# 删掉 "# ...smartdns " (带空格的注释行) 和 "smartdns=" (赋值行)
+sed -i '/# CONFIG_PACKAGE_smartdns /d; /CONFIG_PACKAGE_smartdns=/d' .config
 echo "CONFIG_PACKAGE_smartdns=y" >> .config
+
+sed -i '/# CONFIG_PACKAGE_luci-app-smartdns /d; /CONFIG_PACKAGE_luci-app-smartdns=/d' .config
+echo "CONFIG_PACKAGE_luci-app-smartdns=y" >> .config
 # ---------------------------------------------------------
 # 5. MosDNS 状态显示补丁
 
