@@ -134,19 +134,28 @@ jobs:
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
           
-      - name: 🎯 专项爆破：测试修复两个地鼠包
+      - name: 🎯 专项爆破：带依赖环境测试 (最稳方案)
         run: |
           cd openwrt
-          # 1. 强制编译 opkg (包括 host 工具)
+          # 1. 先安装必要的工具链（包含 ninja, sstrip, patch 等）
+          # 这是解决 Error 127 (Ninja missing) 的核心
+          echo "Installing tools..."
+          make tools/install -j$(nproc) || make tools/install -j1 V=s
+          
+          # 2. 安装 host 辅助包（包含 libjson-c 等）
+          echo "Installing hostpkg..."
+          make package/libs/libjson-c/host/compile V=s -j$(nproc)
+
+          # 3. 现在再测 opkg，环境就全了
           echo "Testing opkg..."
-          make package/system/opkg/host/compile V=s -j1 || (echo "❌ opkg host 修复失败!" && exit 1)
-          make package/system/opkg/compile V=s -j1 || (echo "❌ opkg target 修复失败!" && exit 1)
+          make package/system/opkg/host/compile V=s -j1
+          make package/system/opkg/compile V=s -j1
           
-          # 2. 强制编译 fullconenat-nft
+          # 4. 测试 fullconenat-nft
           echo "Testing fullconenat-nft..."
-          make package/network/utils/fullconenat-nft/compile V=s -j1 || (echo "❌ fullconenat-nft 修复失败!" && exit 1)
+          make package/network/utils/fullconenat-nft/compile V=s -j1
           
-          echo "✅ 两个地鼠包已成功爆破，补丁有效！"
+          echo "✅ 核心地鼠包已在模拟环境下验证通过！"
 
 
       - name: Compile the firmware
