@@ -36,7 +36,6 @@ MOSDNS_CONTROLLER="feeds/small/luci-app-mosdns/luasrc/controller/mosdns.lua"
 
 # 5. 通用自动化地鼠修复函数 (增强兼容性)
 # ---------------------------------------------------------
-#!/bin/bash
 set -x  # 开启调试追踪
 
 echo "Checking environment..."
