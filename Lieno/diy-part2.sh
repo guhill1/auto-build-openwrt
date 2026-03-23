@@ -16,25 +16,25 @@
 sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' feeds/packages/lang/rust/Makefile
 
 # 2. 物理清障：干掉冲突包 (SmartDNS & Nikki)
-# ---------------------------------------------------------
-# 干掉官方版 SmartDNS，确权给 Kenzo/Small
 rm -rf feeds/luci/applications/luci-app-smartdns
 rm -rf feeds/packages/net/smartdns
-# 顺便干掉那个会导致 out of sync 的 Nikki (物理超度)
-rm -rf $(find feeds -name "luci-app-nikki" -type d)
-rm -rf $(find feeds -name "nikki" -type d)
 
-# 3. 重新关联 feeds (确保上面的删除生效)
-# ---------------------------------------------------------
-./scripts/feeds update -i
+# 3. 确权：强行重新全局扫码
+./scripts/feeds update -a
 ./scripts/feeds install -a
 
-# 4. MosDNS 状态显示补丁
+# 4. 强制勾选（防止因为路径变动导致的自动取消）
+sed -i '/CONFIG_PACKAGE_luci-app-smartdns/d' .config
+echo "CONFIG_PACKAGE_luci-app-smartdns=y" >> .config
+sed -i '/CONFIG_PACKAGE_smartdns/d' .config
+echo "CONFIG_PACKAGE_smartdns=y" >> .config
 # ---------------------------------------------------------
+# 5. MosDNS 状态显示补丁
+
 MOSDNS_CONTROLLER="feeds/small/luci-app-mosdns/luasrc/controller/mosdns.lua"
 [ -f "$MOSDNS_CONTROLLER" ] && sed -i 's/pgrep -x mosdns/pgrep -f mosdns/g' "$MOSDNS_CONTROLLER"
 
-# 5. 通用自动化地鼠修复函数 (增强兼容性)
+# 6. 通用自动化地鼠修复函数 (增强兼容性)
 # ---------------------------------------------------------
 set -x  # 开启 Shell 执行追踪
 
@@ -102,7 +102,7 @@ fix_pkg_hash_auto "package/network/utils/fullconenat-nft" "fullconenat-nft"
 
 set +x
 # ---------------------------------------------------------
-# 6.
+# 7.
 # ---------------------------------------------------------
 build_date=$(date +'%Y-%m-%d')
 sed -i -E "s/OPENWRT_RELEASE=.{1}%D %V %C.*/OPENWRT_RELEASE='%D %V %C guhill $build_date'/g" \
