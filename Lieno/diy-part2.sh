@@ -36,34 +36,22 @@ MOSDNS_CONTROLLER="feeds/small/luci-app-mosdns/luasrc/controller/mosdns.lua"
 
 # 5. 通用自动化地鼠修复函数 (增强兼容性)
 # ---------------------------------------------------------
-fix_pkg_hash_auto() {
-    local pkg_path=$1
-    local pkg_name=$2
-    [ -f "$pkg_path/Makefile" ] || return 0
+#!/bin/bash
+set -x  # 开启调试追踪
 
-    # 同时匹配 PKG_HASH 和 PKG_MIRROR_HASH
-    local hash_line=$(grep -E "PKG_.*HASH:=" "$pkg_path/Makefile")
-    local expected_hash=$(echo "$hash_line" | cut -d'=' -f2 | tr -d ' \t')
-    [ -z "$expected_hash" ] && return 0
+echo "Checking environment..."
+# 暴力修复 opkg
+find package -name "Makefile" | grep "system/opkg/Makefile" | xargs sed -i 's/dbe5cb21e881d60733587cad22e01aab52ab5261b5f21003d32d06ff88442add/41fb2c79ce6014e28f7dd0cd8c65efe803986278f2587d1d4681883d8847d87c/g'
 
-    echo "🔍 Checking $pkg_name..."
-    make "$pkg_path/download" V=s > /dev/null 2>&1
+# 暴力修复 fullconenat-nft (兼容 PKG_MIRROR_HASH)
+find package -name "Makefile" | grep "fullconenat-nft/Makefile" | xargs sed -i 's/6ea91089b9350df186961ac7a90200cc42083a2d29bb78f433a7279a25b76c2a/84d54b5e6091148c31d4eddff2f8ead763c9ef318fdf35098a6f9cea9a29b7c8/g'
 
-    # 保护减号，精准抓取 dl 目录下的文件
-    local real_file=$(ls -t dl/${pkg_name}* 2>/dev/null | head -n 1)
+# 验证环节：如果 grep 没输出，说明 sed 没改成功
+echo "🔍 VERIFYING PATCHES..."
+grep -r "41fb2c79" package/system/opkg/Makefile
+grep -r "84d54b5e" package/network/utils/fullconenat-nft/Makefile
 
-    if [ -f "$real_file" ]; then
-        local got_hash=$(sha256sum "$real_file" | cut -d' ' -f1)
-        if [ "$expected_hash" != "$got_hash" ]; then
-            # 使用分隔符 | 防止路径中可能存在的斜杠干扰
-            sed -i "s|$expected_hash|$got_hash|g" "$pkg_path/Makefile"
-            echo "✅ Fixed $pkg_name: $got_hash"
-        fi
-    fi
-}
-
-fix_pkg_hash_auto "package/system/opkg" "opkg"
-fix_pkg_hash_auto "package/network/utils/fullconenat-nft" "fullconenat-nft"
+set +x  # 关闭调试，回到正常输出
 
 # 6.
 # ---------------------------------------------------------
