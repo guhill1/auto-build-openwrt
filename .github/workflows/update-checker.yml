@@ -16,7 +16,8 @@ env:
   REPO_BRANCH: master
 
 on:
-  #workflow_dispatch:
+  # 允许手动触发工作流
+  workflow_dispatch:
   #schedule:
   #- cron: 0 1 */7 * *
   
