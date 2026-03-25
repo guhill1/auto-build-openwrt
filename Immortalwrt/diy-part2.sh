@@ -21,6 +21,10 @@ rm -rf feeds/packages/net/mosdns
 ./scripts/feeds update -i
 ./scripts/feeds install -a
 
+# 精准定位这行并替换为启用状态
+sed -i 's/# CONFIG_PACKAGE_mosdns is not set/CONFIG_PACKAGE_mosdns=y/g' .config
+# 如果 sed 没匹配到（比如文件中根本没这一行），就直接追加到末尾
+grep -q "CONFIG_PACKAGE_mosdns=y" .config || echo "CONFIG_PACKAGE_mosdns=y" >> .config
 # =========================================================
 # 2. 编译加速：Rust LLVM 离线补丁
 # =========================================================
