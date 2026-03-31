@@ -11,29 +11,52 @@
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 
-# =========================================================
-# 1. 物理清障：移除 ImmortalWrt 内置的 MosDNS (防止源冲突)
-# =========================================================
-# 在 CI 环境中，当前目录已是源码根目录，直接删除即可
-rm -rf feeds/packages/net/mosdns
+# =============================================================================
+# 1. 【核心备份】先把调好的 .config 锁死，防止被接下来的操作改乱
+[ -f .config ] && cp .config .config.bak
 
-# 刷新索引并确权给你自定义源里的 MosDNS
+# =============================================================================
+# 2. Fix Rust
+# =============================================================================
+sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' feeds/packages/lang/rust/Makefile
+
+# =============================================================================
+# 3. Fix MosDNS (sbwml 垂直打击版)
+# =============================================================================
+# 物理清理残留
+rm -rf feeds/packages/net/mosdns
+rm -rf package/luci-app-mosdns
+
+# 垂直拉取：直接进 package 目录，避开 feeds 软链接冲突
+git clone --depth=1 https://github.com/sbwml/luci-app-mosdns package/luci-app-mosdns
+
+# =============================================================================
+# 4. Fix SmartDNS (官方/指定源确权)
+# =============================================================================
+# 物理清理冲突包
+rm -rf feeds/luci/applications/luci-app-smartdns
+rm -rf feeds/packages/net/smartdns
+
+# 重新扫码并安装 (仅针对 SmartDNS 所在的 feeds)
 ./scripts/feeds update -i
 ./scripts/feeds install -a
 
-# 精准定位这行并替换为启用状态
-sed -i 's/# CONFIG_PACKAGE_mosdns is not set/CONFIG_PACKAGE_mosdns=y/g' .config
-# 如果 sed 没匹配到（比如文件中根本没这一行），就直接追加到末尾
-grep -q "CONFIG_PACKAGE_mosdns=y" .config || echo "CONFIG_PACKAGE_mosdns=y" >> .config
+# =============================================================================
+# 5. 【配置回填与索引建立】
+# =============================================================================
+# 把刚才锁死的配置原封不动拷回来
+if [ -f .config.bak ]; then
+    cp .config.bak .config
+    echo "--- 已恢复原始配置清单 ---"
+fi
+
+# 【核心一步：建立 Mapping 索引】
+# 不再用大量 echo，直接让系统把 .config 里的 y 开关与刚搞好的源码“锁死”
+# 这一步会处理好 MosDNS 和 SmartDNS 的所有依赖
+make oldconfig
 
 # =========================================================
-# 2. 编译加速：Rust LLVM 离线补丁
-# =========================================================
-# 解决编译 Rust 插件时下载巨大 CI LLVM 导致的超时问题
-sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' feeds/packages/lang/rust/Makefile
-
-# =========================================================
-# 3.
+# 6.
 # =========================================================
 build_date=$(date +'%Y-%m-%d')
 sed -i -E "s/OPENWRT_RELEASE=.{1}%D %V %C.*/OPENWRT_RELEASE='%D %V %C guhill $build_date'/g" \
