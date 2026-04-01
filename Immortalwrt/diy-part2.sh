@@ -53,7 +53,7 @@ fi
 # 【核心一步：建立 Mapping 索引】
 # 不再用大量 echo，直接让系统把 .config 里的 y 开关与刚搞好的源码“锁死”
 # 这一步会处理好 MosDNS 和 SmartDNS 的所有依赖
-make oldconfig
+make defconfig
 
 # =========================================================
 # 6.
