@@ -11,33 +11,47 @@
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 
-# 1. 自动定位 Rust 的 Makefile 并关闭 CI LLVM 下载
+# =============================================================================
+# 1. 【核心备份】先把辛苦调好的 .config 锁死，防止被接下来的操作改乱
+[ -f .config ] && cp .config .config.bak
+
+# =============================================================================
+# 2. 自动定位 Rust 的 Makefile 并关闭 CI LLVM 下载
 # ---------------------------------------------------------
 sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' feeds/packages/lang/rust/Makefile
 
-# 2. 物理清障：干掉冲突包 (SmartDNS & Nikki)
+# =============================================================================
+# 3. 物理清障：干掉冲突包 (SmartDNS)
 rm -rf feeds/luci/applications/luci-app-smartdns
 rm -rf feeds/packages/net/smartdns
 
-# 3. 确权：强行重新全局扫码
+# =============================================================================
+# 4. 确权：强行重新全局扫码
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 
-# 4. 精确删除并强行确权
-# 删掉 "# ...smartdns " (带空格的注释行) 和 "smartdns=" (赋值行)
-sed -i '/# CONFIG_PACKAGE_smartdns /d; /CONFIG_PACKAGE_smartdns=/d' .config
-echo "CONFIG_PACKAGE_smartdns=y" >> .config
+# =============================================================================
+# 5. 【配置回填与索引建立】
+# =============================================================================
+# 把刚才锁死的配置原封不动拷回来
+if [ -f .config.bak ]; then
+    cp .config.bak .config
+    echo "--- 已恢复原始配置清单 ---"
+fi
 
-sed -i '/# CONFIG_PACKAGE_luci-app-smartdns /d; /CONFIG_PACKAGE_luci-app-smartdns=/d' .config
-echo "CONFIG_PACKAGE_luci-app-smartdns=y" >> .config
-# ---------------------------------------------------------
-# 5. MosDNS 状态显示补丁
+# 【核心一步：建立 Mapping 索引】
+# 不再用大量 echo，直接让系统把 .config 里的 y 开关与刚搞好的源码“锁死”
+# 这一步会处理好 MosDNS 和 SmartDNS 的所有依赖
+make defconfig
+
+# =============================================================================
+# 6. MosDNS 状态显示补丁
 
 MOSDNS_CONTROLLER="feeds/small/luci-app-mosdns/luasrc/controller/mosdns.lua"
 [ -f "$MOSDNS_CONTROLLER" ] && sed -i 's/pgrep -x mosdns/pgrep -f mosdns/g' "$MOSDNS_CONTROLLER"
 
-# 6. 通用自动化地鼠修复函数 (增强兼容性)
-# ---------------------------------------------------------
+# 7. 通用自动化地鼠修复函数 (增强兼容性)
+# =============================================================================
 set -x  # 开启 Shell 执行追踪
 
 fix_pkg_hash_auto() {
@@ -103,9 +117,9 @@ fix_pkg_hash_auto "package/system/opkg" "opkg"
 fix_pkg_hash_auto "package/network/utils/fullconenat-nft" "fullconenat-nft"
 
 set +x
-# ---------------------------------------------------------
-# 7.
-# ---------------------------------------------------------
+# =============================================================================
+# 8.
+# =============================================================================
 build_date=$(date +'%Y-%m-%d')
 sed -i -E "s/OPENWRT_RELEASE=.{1}%D %V %C.*/OPENWRT_RELEASE='%D %V %C guhill $build_date'/g" \
 package/base-files/files/usr/lib/os-release
