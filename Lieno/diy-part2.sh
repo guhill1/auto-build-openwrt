@@ -25,18 +25,6 @@ sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' 
 rm -rf feeds/luci/applications/luci-app-smartdns
 rm -rf feeds/packages/net/smartdns
 
-# 修复 SmartDNS 48.1 缺失 zlib 依赖导致的编译报错 Bug
-SED_FILE="feeds/kenzo/smartdns/Makefile"
-if [ -f "$SED_FILE" ]; then
-    # 先检查 Makefile 中是否已经包含 +zlib，没有则执行追加
-    if ! grep -q "+zlib" "$SED_FILE"; then
-        echo "🔧 [DEBUG] SmartDNS 缺少 zlib 依赖，正在修补..."
-        sed -i 's/DEPENDS:=+i386:libatomic +libopenssl/DEPENDS:=+i386:libatomic +libopenssl +zlib/g' "$SED_FILE"
-        echo "✅ [SUCCESS] 已成功补齐 zlib 依赖"
-    else
-        echo "⭐ [DEBUG] SmartDNS 已经包含 zlib 依赖，跳过修补。"
-    fi
-fi
 # =============================================================================
 # 4. 确权：强行重新全局扫码
 ./scripts/feeds update -a
