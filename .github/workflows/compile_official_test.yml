@@ -21,13 +21,13 @@ on:
 env:
   REPO_URL: https://github.com/openwrt/openwrt
   REPO_BRANCH: main
-  FEEDS_CONF: official/feeds.conf.default
-  CONFIG_FILE: official/.config
-  FILES: official/files
+  FEEDS_CONF: Official/feeds.conf.default
+  CONFIG_FILE: Official/.config
+  FILES: Official/files
   DIST_NAME: openwrt
 
   # files for patch
-  COMP_PATCH: official/comp_patch
+  COMP_PATCH: Official/comp_patch
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2_of.sh
   UPLOAD_BIN_DIR: false
