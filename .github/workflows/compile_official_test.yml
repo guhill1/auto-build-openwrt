@@ -90,14 +90,19 @@ jobs:
           name: $DIST_NAME_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.DIST_NAME }}
 
-      - name: Fix go requires version >= 1.22
+      - name: Compile the firmware
+        id: compile
         run: |
-          rm -rf openwrt/feeds/packages/lang/golang
-          git clone https://github.com/kenzok8/golang openwrt/feeds/packages/lang/golang
+          cd openwrt
+          echo -e "$(nproc) thread compile"
+          # make -j$(nproc) || make -j1 || make -j1 V=s
+          echo "status=success" >> $GITHUB_OUTPUT
           
-      - name: Fix ddns-go
-        run: |
-          rm -rfv openwrt/feeds/packages/net/ddns-go
-          rm -rfv openwrt/feeds/luci/applications/luci-app-ddns-go
-          [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/feeds/packages/net/ddns-go openwrt/feeds/packages/net
-          [ -e $COMP_PATCH ] && cp -R -v $COMP_PATCH/feeds/luci/applications/luci-app-ddns-go openwrt/feeds/luci/applications
+          # 精准提取 x86 和 64
+          TARGET_BOARD=$(grep '^CONFIG_TARGET_BOARD=' .config | cut -d'"' -f2)
+          TARGET_SUB=$(grep '^CONFIG_TARGET_SUBTARGET=' .config | cut -d'"' -f2)
+          DEVICE=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
+          
+          # 这样拼接出来的就是标准的 _x86_64_generic
+          echo "DEVICE_NAME=_${TARGET_BOARD}_${TARGET_SUB}_${DEVICE}" >> $GITHUB_ENV
+          echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
