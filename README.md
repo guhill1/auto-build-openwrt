@@ -2,7 +2,7 @@
 
 ## Include:
 - Official OpenWrt
-- Lieno OpenWrt
+- Lieno's OpenWrt
 - Immortalwrt
 - Lean's OpenWrt
 
