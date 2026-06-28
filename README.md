@@ -1,16 +1,18 @@
 ## Compile 4 types of x86 OpenWrt firmware
 
 ## Include:
+- Official OpenWrt
+- Lieno OpenWrt
 - Immortalwrt
 - Lean's OpenWrt
-- Lieno OpenWrt
-- Official OpenWrt
+
 
 ## Credits
 - [P3TERX](https://github.com/P3TERX/Actions-OpenWrt)
+- [OpenWrt](https://github.com/openwrt/openwrt)
+- [Lienol's Openwrt](https://github.com/Lienol/openwrt)
 - [Immortalwrt](https://github.com/immortalwrt/immortalwrt)
 - [Lean's OpenWrt](https://github.com/coolsnowwolf/lede)
-- [OpenWrt](https://github.com/openwrt/openwrt)
 - [kenzok8](https://github.com/kenzok8/small-package)
 - [Microsoft Azure](https://azure.microsoft.com)
 - [GitHub Actions](https://github.com/features/actions)
