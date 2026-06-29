@@ -21,6 +21,16 @@
 sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' feeds/packages/lang/rust/Makefile
 
 # =============================================================================
+# 3. 物理清障：干掉冲突包 (SmartDNS)
+rm -rf feeds/luci/applications/luci-app-smartdns
+rm -rf feeds/packages/net/smartdns
+
+# =============================================================================
+# 4. 确权：强行重新全局扫码
+./scripts/feeds update -a
+./scripts/feeds install -a
+
+# =============================================================================
 # 5. 【配置回填与索引建立】
 # =============================================================================
 # 把刚才锁死的配置原封不动拷回来
