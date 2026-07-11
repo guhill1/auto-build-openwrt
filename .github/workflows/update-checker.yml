@@ -13,7 +13,7 @@ name: Update Checker
 
 env:
   REPO_URL: https://github.com/Lienol/openwrt
-  REPO_BRANCH: openwrt-25.12
+  REPO_BRANCH: 25.12
 
 on:
   # 允许手动触发工作流
