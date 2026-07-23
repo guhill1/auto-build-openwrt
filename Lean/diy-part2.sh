@@ -22,8 +22,8 @@ build_date=$(date +'%Y-%m-%d')
 target_js="feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js"
 
 if [ -f "$target_js" ]; then
-    sed -i "s/ + ' \[Guhill .*\]'//g" "$target_js"
-    sed -i "s/boardinfo.release.description/boardinfo.release.description + ' [Guhill $build_date]'/g" "$target_js"
+    sed -i "s/ + ' \[nodexbit32 .*\]'//g" "$target_js"
+    sed -i "s/boardinfo.release.description/boardinfo.release.description + ' [nodexbit32 $build_date]'/g" "$target_js"
 fi
 
 [ -f package/lean/autocore/files/x86/autocore ] && sed -i '/index.htm/s/^/#/' package/lean/autocore/files/x86/autocore

@@ -59,5 +59,5 @@ make defconfig
 # 6.
 # =========================================================
 build_date=$(date +'%Y-%m-%d')
-sed -i -E "s/OPENWRT_RELEASE=.{1}%D %V %C.*/OPENWRT_RELEASE='%D %V %C guhill $build_date'/g" \
+sed -i -E "s/OPENWRT_RELEASE=.{1}%D %V %C.*/OPENWRT_RELEASE='%D %V %C nodexbit32 $build_date'/g" \
 package/base-files/files/usr/lib/os-release
